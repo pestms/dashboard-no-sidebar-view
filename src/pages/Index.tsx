@@ -3,7 +3,7 @@ import MetricCard from '@/components/MetricCard';
 import LeadSourcesChart from '@/components/LeadSourcesChart';
 import RevenueChart from '@/components/RevenueChart';
 import CompanyTable from '@/components/CompanyTable';
-import { Search, Dashboard, Task, Projects, Customers, Company } from 'lucide-react';
+import { Search, BarChart3, CheckSquare, FolderOpen, Users, Building2 } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -25,7 +25,7 @@ const Index = () => {
           
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-purple-400">
-              <Dashboard className="w-4 h-4" />
+              <BarChart3 className="w-4 h-4" />
               <span className="text-sm">Dashboard</span>
             </div>
             <button className="px-4 py-2 bg-gray-800 rounded-lg text-sm hover:bg-gray-700 transition-colors">
