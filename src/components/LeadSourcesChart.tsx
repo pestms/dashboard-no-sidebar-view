@@ -2,10 +2,12 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 const data = [
-  { name: 'Google Ads', value: 234, color: '#3B82F6' },
-  { name: 'Referrals', value: 189, color: '#10B981' },
-  { name: 'Website', value: 156, color: '#F59E0B' },
-  { name: 'Social Media', value: 98, color: '#EF4444' },
+  { name: 'Downtown District', value: 89, color: '#3B82F6' },
+  { name: 'Business District', value: 76, color: '#10B981' },
+  { name: 'Residential Zone', value: 134, color: '#F59E0B' },
+  { name: 'Suburban Area', value: 98, color: '#EF4444' },
+  { name: 'Medical District', value: 45, color: '#8B5CF6' },
+  { name: 'Shopping Area', value: 67, color: '#06B6D4' },
 ];
 
 const LeadSourcesChart = () => {
@@ -14,7 +16,7 @@ const LeadSourcesChart = () => {
   return (
     <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white text-lg font-semibold">Lead Sources This Month</h3>
+        <h3 className="text-white text-lg font-semibold">Lead Sources by Area</h3>
       </div>
       
       <div className="flex items-center justify-center mb-6">
@@ -65,12 +67,12 @@ const LeadSourcesChart = () => {
       </div>
 
       <div className="mt-6 p-3 bg-gray-800 rounded-lg">
-        <div className="text-sm text-gray-400 mb-1">Best Performing Source</div>
-        <div className="text-green-400 font-medium">Google Ads - 234 leads (35%)</div>
+        <div className="text-sm text-gray-400 mb-1">Top Performing Area</div>
+        <div className="text-green-400 font-medium">Residential Zone - 134 leads (26%)</div>
       </div>
 
       <button className="w-full mt-4 text-center py-2 text-gray-400 hover:text-white transition-colors text-sm border border-gray-700 rounded-lg hover:border-gray-600">
-        View Detailed Analytics
+        View Area Analytics
       </button>
     </div>
   );

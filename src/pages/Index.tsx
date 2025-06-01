@@ -1,7 +1,8 @@
-
 import MetricCard from '@/components/MetricCard';
 import LeadSourcesChart from '@/components/LeadSourcesChart';
 import RevenueChart from '@/components/RevenueChart';
+import ConversionChart from '@/components/ConversionChart';
+import ServiceTypeChart from '@/components/ServiceTypeChart';
 import CompanyTable from '@/components/CompanyTable';
 import { Search, BarChart3, CheckSquare, FolderOpen, Users, Building2, TrendingUp, DollarSign, Target, Percent, FileText, Shield, Bug } from 'lucide-react';
 
@@ -73,10 +74,16 @@ const Index = () => {
           />
         </div>
 
-        {/* Charts Row */}
+        {/* Charts Row 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <LeadSourcesChart />
           <RevenueChart />
+        </div>
+
+        {/* Charts Row 2 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ConversionChart />
+          <ServiceTypeChart />
         </div>
 
         {/* Company Table */}

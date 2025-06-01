@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Search, Filter, ChevronDown, ChevronUp, ArrowUpDown, Eye, Star, Building, Phone, Mail, Calendar, Bug } from 'lucide-react';
 import { 
@@ -7,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import LeadDetailDialog from './LeadDetailDialog';
 
 const pestControlLeads = [
   {
@@ -121,6 +121,8 @@ const CompanyTable = () => {
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredAndSortedLeads = pestControlLeads
     .filter(lead => {
@@ -178,6 +180,11 @@ const CompanyTable = () => {
       case 'contract': return '✅';
       default: return '❓';
     }
+  };
+
+  const handleViewDetails = (lead: any) => {
+    setSelectedLead(lead);
+    setIsDialogOpen(true);
   };
 
   return (
@@ -335,7 +342,10 @@ const CompanyTable = () => {
                 </td>
                 <td className="p-4">
                   <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-1 hover:bg-gray-700 rounded">
+                    <button 
+                      onClick={() => handleViewDetails(lead)}
+                      className="p-1 hover:bg-gray-700 rounded"
+                    >
                       <Eye className="w-4 h-4 text-gray-400 hover:text-white" />
                     </button>
                     <button className="p-1 hover:bg-gray-700 rounded">
@@ -348,6 +358,12 @@ const CompanyTable = () => {
           </tbody>
         </table>
       </div>
+
+      <LeadDetailDialog 
+        lead={selectedLead}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      />
     </div>
   );
 };
