@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Search, Filter, ChevronDown, ChevronUp, ArrowUpDown, Eye, Star, Building } from 'lucide-react';
+import { Search, Filter, ChevronDown, ChevronUp, ArrowUpDown, Eye, Star, Building, Phone, Mail, Calendar, Bug } from 'lucide-react';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -8,119 +8,137 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const companies = [
+const pestControlLeads = [
   {
-    name: 'Loom',
-    icon: '🎥',
-    description: 'Video messaging tool that he...',
-    domain: 'loom.com',
-    location: 'San Francisco, 140 2nd Street, 3rd Floor, United...',
-    employees: 150,
-    revenue: '$50M',
-    status: 'hot'
+    name: 'Johnson Family Residence',
+    icon: '🏠',
+    description: 'Ant infestation in kitchen and dining area',
+    address: '123 Oak Street, Downtown District',
+    phone: '(555) 123-4567',
+    email: 'johnson@email.com',
+    serviceType: 'Residential',
+    priority: 'high',
+    status: 'lead',
+    lastContact: '2 days ago',
+    estimatedValue: '$280'
   },
   {
-    name: 'Notion',
-    icon: '📝',
-    description: 'All-in-one workspace that co...',
-    domain: 'notion.so',
-    location: 'San Francisco, 2300 Harrison Street, United Sta...',
-    employees: 200,
-    revenue: '$100M',
-    status: 'warm'
+    name: 'Green Valley Restaurant',
+    icon: '🍽️',
+    description: 'Cockroach problem in kitchen area',
+    address: '456 Main Street, Business District',
+    phone: '(555) 234-5678',
+    email: 'manager@greenvalley.com',
+    serviceType: 'Commercial',
+    priority: 'high',
+    status: 'quote',
+    lastContact: '1 day ago',
+    estimatedValue: '$850'
   },
   {
-    name: 'Slack',
-    icon: '💬',
-    description: 'Team communication platfor...',
-    domain: 'slack.com',
-    location: 'San Francisco, 500 Howard Street, United State...',
-    employees: 2500,
-    revenue: '$1B',
-    status: 'hot'
+    name: 'Smith Apartment Complex',
+    icon: '🏢',
+    description: 'Rodent control for 24-unit building',
+    address: '789 Elm Street, Residential Zone',
+    phone: '(555) 345-6789',
+    email: 'maintenance@smithapts.com',
+    serviceType: 'Commercial',
+    priority: 'medium',
+    status: 'contract',
+    lastContact: '3 days ago',
+    estimatedValue: '$1,200'
   },
   {
-    name: 'Canva',
-    icon: '🎨',
-    description: 'Graphic design tool that enab...',
-    domain: 'canva.com',
-    location: 'Sydney, 110 Kippax Street, Australia, and has 1 o...',
-    employees: 3000,
-    revenue: '$1.5B',
-    status: 'cold'
+    name: 'Davis Family Home',
+    icon: '🏡',
+    description: 'Termite inspection and treatment needed',
+    address: '321 Pine Avenue, Suburban Area',
+    phone: '(555) 456-7890',
+    email: 'davis.family@email.com',
+    serviceType: 'Residential',
+    priority: 'high',
+    status: 'quote',
+    lastContact: '1 day ago',
+    estimatedValue: '$650'
   },
   {
-    name: 'Facebook',
-    icon: '📘',
-    description: 'Social networking platform th...',
-    domain: 'facebook.com',
-    location: 'Menlo Park, 1 Hacker Way, United States, and ha...',
-    employees: 70000,
-    revenue: '$117B',
-    status: 'warm'
+    name: 'City Hospital',
+    icon: '🏥',
+    description: 'Monthly pest prevention service',
+    address: '555 Health Boulevard, Medical District',
+    phone: '(555) 567-8901',
+    email: 'facilities@cityhospital.org',
+    serviceType: 'Commercial',
+    priority: 'low',
+    status: 'contract',
+    lastContact: '1 week ago',
+    estimatedValue: '$2,400'
   },
   {
-    name: 'Twitter',
-    icon: '🐦',
-    description: 'Microblogging and social net...',
-    domain: 'twitter.com',
-    location: 'San Francisco, 1355 Market Street, United States...',
-    employees: 7500,
-    revenue: '$5B',
-    status: 'hot'
+    name: 'Wilson Residence',
+    icon: '🏠',
+    description: 'Bee hive removal from backyard',
+    address: '888 Maple Drive, Garden District',
+    phone: '(555) 678-9012',
+    email: 'wilson.home@email.com',
+    serviceType: 'Residential',
+    priority: 'medium',
+    status: 'lead',
+    lastContact: '4 hours ago',
+    estimatedValue: '$320'
   },
   {
-    name: 'Spotify',
-    icon: '🎵',
-    description: 'Digital music streaming servi...',
-    domain: 'spotify.com',
-    location: 'Stockholm, Regeringsgatan 19, Sweden, and has...',
-    employees: 6600,
-    revenue: '$13B',
-    status: 'warm'
+    name: 'Corner Grocery Store',
+    icon: '🏪',
+    description: 'Fly control in produce section',
+    address: '202 Commerce Street, Shopping Area',
+    phone: '(555) 789-0123',
+    email: 'owner@cornerstore.com',
+    serviceType: 'Commercial',
+    priority: 'medium',
+    status: 'lead',
+    lastContact: '6 hours ago',
+    estimatedValue: '$450'
   },
   {
-    name: 'OpenAI',
-    icon: '🤖',
-    description: 'Artificial intelligence researc...',
-    domain: 'openai.com',
-    location: 'San Francisco, 3180 18th Street, United States, a...',
-    employees: 1500,
-    revenue: '$2B',
-    status: 'hot'
+    name: 'Thompson Estate',
+    icon: '🏰',
+    description: 'Comprehensive pest management plan',
+    address: '999 Luxury Lane, Elite Neighborhood',
+    phone: '(555) 890-1234',
+    email: 'estate@thompson.com',
+    serviceType: 'Residential',
+    priority: 'low',
+    status: 'contract',
+    lastContact: '2 weeks ago',
+    estimatedValue: '$1,800'
   }
 ];
 
 const CompanyTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const filteredAndSortedCompanies = companies
-    .filter(company => {
-      const matchesSearch = company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           company.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'all' || company.status === statusFilter;
-      return matchesSearch && matchesStatus;
+  const filteredAndSortedLeads = pestControlLeads
+    .filter(lead => {
+      const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           lead.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           lead.serviceType.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
+      const matchesPriority = priorityFilter === 'all' || lead.priority === priorityFilter;
+      return matchesSearch && matchesStatus && matchesPriority;
     })
     .sort((a, b) => {
       let aValue = a[sortBy as keyof typeof a];
       let bValue = b[sortBy as keyof typeof b];
       
-      if (sortBy === 'employees') {
-        aValue = a.employees;
-        bValue = b.employees;
-      }
-      
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return sortOrder === 'asc' 
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
-      }
-      
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
       }
       
       return 0;
@@ -137,10 +155,28 @@ const CompanyTable = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'hot': return 'text-red-400 bg-red-900/20';
-      case 'warm': return 'text-yellow-400 bg-yellow-900/20';
-      case 'cold': return 'text-blue-400 bg-blue-900/20';
+      case 'lead': return 'text-blue-400 bg-blue-900/20';
+      case 'quote': return 'text-yellow-400 bg-yellow-900/20';
+      case 'contract': return 'text-green-400 bg-green-900/20';
       default: return 'text-gray-400 bg-gray-900/20';
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'text-red-400';
+      case 'medium': return 'text-yellow-400';
+      case 'low': return 'text-green-400';
+      default: return 'text-gray-400';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'lead': return '🎯';
+      case 'quote': return '📋';
+      case 'contract': return '✅';
+      default: return '❓';
     }
   };
 
@@ -149,21 +185,21 @@ const CompanyTable = () => {
       <div className="p-6 border-b border-gray-800">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-white text-lg font-semibold flex items-center gap-2">
-            <Building className="w-5 h-5" />
-            Company Leads
-            <span className="text-sm text-gray-400 font-normal">({filteredAndSortedCompanies.length})</span>
+            <Bug className="w-5 h-5 text-green-400" />
+            Pest Control Leads
+            <span className="text-sm text-gray-400 font-normal">({filteredAndSortedLeads.length})</span>
           </h3>
         </div>
         
-        <div className="flex items-center space-x-4">
-          <div className="relative flex-1">
+        <div className="flex items-center space-x-4 flex-wrap gap-2">
+          <div className="relative flex-1 min-w-64">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search companies..."
+              placeholder="Search leads..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-green-500 transition-colors"
             />
           </div>
           
@@ -171,7 +207,7 @@ const CompanyTable = () => {
             <DropdownMenuTrigger asChild>
               <button className="flex items-center space-x-2 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-200">
                 <Filter className="w-4 h-4" />
-                <span>Filter: {statusFilter === 'all' ? 'All' : statusFilter}</span>
+                <span>Status: {statusFilter === 'all' ? 'All' : statusFilter}</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
             </DropdownMenuTrigger>
@@ -179,14 +215,37 @@ const CompanyTable = () => {
               <DropdownMenuItem onClick={() => setStatusFilter('all')} className="text-white hover:bg-gray-700">
                 All Status
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter('hot')} className="text-red-400 hover:bg-gray-700">
-                🔥 Hot Leads
+              <DropdownMenuItem onClick={() => setStatusFilter('lead')} className="text-blue-400 hover:bg-gray-700">
+                🎯 Leads
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter('warm')} className="text-yellow-400 hover:bg-gray-700">
-                ⚡ Warm Leads
+              <DropdownMenuItem onClick={() => setStatusFilter('quote')} className="text-yellow-400 hover:bg-gray-700">
+                📋 Quotes
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter('cold')} className="text-blue-400 hover:bg-gray-700">
-                ❄️ Cold Leads
+              <DropdownMenuItem onClick={() => setStatusFilter('contract')} className="text-green-400 hover:bg-gray-700">
+                ✅ Contracts
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center space-x-2 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-200">
+                <span>Priority: {priorityFilter === 'all' ? 'All' : priorityFilter}</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-gray-800 border-gray-700">
+              <DropdownMenuItem onClick={() => setPriorityFilter('all')} className="text-white hover:bg-gray-700">
+                All Priority
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setPriorityFilter('high')} className="text-red-400 hover:bg-gray-700">
+                🔴 High Priority
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setPriorityFilter('medium')} className="text-yellow-400 hover:bg-gray-700">
+                🟡 Medium Priority
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setPriorityFilter('low')} className="text-green-400 hover:bg-gray-700">
+                🟢 Low Priority
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -203,11 +262,14 @@ const CompanyTable = () => {
               <DropdownMenuItem onClick={() => handleSort('name')} className="text-white hover:bg-gray-700">
                 Sort by Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSort('employees')} className="text-white hover:bg-gray-700">
-                Sort by Size {sortBy === 'employees' && (sortOrder === 'asc' ? '↑' : '↓')}
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSort('status')} className="text-white hover:bg-gray-700">
                 Sort by Status {sortBy === 'status' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSort('priority')} className="text-white hover:bg-gray-700">
+                Sort by Priority {sortBy === 'priority' && (sortOrder === 'asc' ? '↑' : '↓')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSort('estimatedValue')} className="text-white hover:bg-gray-700">
+                Sort by Value {sortBy === 'estimatedValue' && (sortOrder === 'asc' ? '↑' : '↓')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -218,41 +280,58 @@ const CompanyTable = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800">
-              <th className="text-left p-4 text-gray-400 font-medium text-sm">Company</th>
-              <th className="text-left p-4 text-gray-400 font-medium text-sm">Description</th>
-              <th className="text-left p-4 text-gray-400 font-medium text-sm">Domains</th>
+              <th className="text-left p-4 text-gray-400 font-medium text-sm">Customer</th>
+              <th className="text-left p-4 text-gray-400 font-medium text-sm">Service Details</th>
+              <th className="text-left p-4 text-gray-400 font-medium text-sm">Contact</th>
               <th className="text-left p-4 text-gray-400 font-medium text-sm">Status</th>
-              <th className="text-left p-4 text-gray-400 font-medium text-sm">Size</th>
+              <th className="text-left p-4 text-gray-400 font-medium text-sm">Value</th>
               <th className="w-12"></th>
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedCompanies.map((company, index) => (
+            {filteredAndSortedLeads.map((lead, index) => (
               <tr key={index} className="border-b border-gray-800 hover:bg-gray-800/50 transition-all duration-200 group">
                 <td className="p-4">
                   <div className="flex items-center space-x-3">
-                    <span className="text-lg">{company.icon}</span>
+                    <span className="text-lg">{lead.icon}</span>
                     <div>
-                      <span className="text-white font-medium">{company.name}</span>
-                      <div className="text-xs text-gray-400">{company.revenue}</div>
+                      <div className="text-white font-medium">{lead.name}</div>
+                      <div className="text-xs text-gray-400">{lead.serviceType}</div>
+                      <div className={`text-xs ${getPriorityColor(lead.priority)}`}>
+                        {lead.priority} priority
+                      </div>
                     </div>
                   </div>
                 </td>
-                <td className="p-4 text-gray-300 text-sm max-w-xs truncate">
-                  {company.description}
+                <td className="p-4">
+                  <div className="text-gray-300 text-sm max-w-xs">
+                    <div className="font-medium mb-1">{lead.description}</div>
+                    <div className="text-xs text-gray-500">{lead.address}</div>
+                  </div>
                 </td>
                 <td className="p-4">
-                  <a href={`https://${company.domain}`} className="text-blue-400 hover:text-blue-300 transition-colors text-sm">
-                    {company.domain}
-                  </a>
+                  <div className="text-sm">
+                    <div className="flex items-center gap-1 text-gray-300 mb-1">
+                      <Phone className="w-3 h-3" />
+                      {lead.phone}
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-400 text-xs mb-1">
+                      <Mail className="w-3 h-3" />
+                      {lead.email}
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-500 text-xs">
+                      <Calendar className="w-3 h-3" />
+                      {lead.lastContact}
+                    </div>
+                  </div>
                 </td>
                 <td className="p-4">
-                  <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(company.status)}`}>
-                    {company.status}
+                  <span className={`px-3 py-1 rounded-full text-xs flex items-center gap-1 w-fit ${getStatusColor(lead.status)}`}>
+                    {getStatusIcon(lead.status)} {lead.status}
                   </span>
                 </td>
-                <td className="p-4 text-gray-300 text-sm">
-                  {company.employees.toLocaleString()} employees
+                <td className="p-4 text-green-400 font-medium text-sm">
+                  {lead.estimatedValue}
                 </td>
                 <td className="p-4">
                   <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">

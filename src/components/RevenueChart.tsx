@@ -1,27 +1,38 @@
 
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 const data = [
-  { month: 'Jan', revenue: 180000, target: 200000 },
-  { month: 'Feb', revenue: 220000, target: 210000 },
-  { month: 'Mar', revenue: 284000, target: 250000 },
-  { month: 'Apr', revenue: 190000, target: 230000 },
-  { month: 'May', revenue: 250000, target: 240000 },
-  { month: 'Jun', revenue: 210000, target: 220000 },
+  { month: 'Jan', revenue: 18500, contracts: 42, quotes: 58 },
+  { month: 'Feb', revenue: 22100, contracts: 48, quotes: 65 },
+  { month: 'Mar', revenue: 28400, contracts: 56, quotes: 72 },
+  { month: 'Apr', revenue: 19200, contracts: 45, quotes: 61 },
+  { month: 'May', revenue: 25800, contracts: 52, quotes: 68 },
+  { month: 'Jun', revenue: 24750, contracts: 51, quotes: 69 },
 ];
 
 const RevenueChart = () => {
+  const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
+  const totalContracts = data.reduce((sum, item) => sum + item.contracts, 0);
+
   return (
     <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
-      <h3 className="text-white text-lg font-semibold mb-2">Revenue Flow</h3>
+      <h3 className="text-white text-lg font-semibold mb-2">Revenue & Contract Flow</h3>
       <div className="mb-6">
-        <div className="text-2xl font-bold text-white">$284,000</div>
-        <div className="text-sm text-gray-400">Total Revenue (Last 6 Months)</div>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <div className="text-2xl font-bold text-white">${(totalRevenue / 1000).toFixed(0)}K</div>
+            <div className="text-sm text-gray-400">Total Revenue (6 Months)</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-green-400">{totalContracts}</div>
+            <div className="text-sm text-gray-400">Active Contracts</div>
+          </div>
+        </div>
         <div className="flex items-center mt-2">
-          <span className="text-yellow-400 text-sm">🏆 Best Performing Month</span>
+          <span className="text-green-400 text-sm">📈 March Best Month</span>
         </div>
         <div className="text-xs text-gray-500 mt-1">
-          March is the highest revenue for the last 6 months with $51,500
+          March had the highest revenue with $28.4K from 56 active contracts
         </div>
       </div>
 
@@ -34,10 +45,33 @@ const RevenueChart = () => {
             tick={{ fill: '#9CA3AF', fontSize: 12 }}
           />
           <YAxis hide />
-          <Bar dataKey="revenue" fill="#EC4899" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="target" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#1F2937', 
+              border: '1px solid #374151',
+              borderRadius: '8px',
+              color: '#fff'
+            }}
+            formatter={(value, name) => [
+              name === 'revenue' ? `$${value.toLocaleString()}` : value,
+              name === 'revenue' ? 'Revenue' : name === 'contracts' ? 'Contracts' : 'Quotes'
+            ]}
+          />
+          <Bar dataKey="revenue" fill="#10B981" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="contracts" fill="#3B82F6" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
+
+      <div className="flex items-center justify-center mt-4 space-x-6">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-green-500 rounded"></div>
+          <span className="text-gray-400 text-sm">Revenue</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-blue-500 rounded"></div>
+          <span className="text-gray-400 text-sm">Contracts</span>
+        </div>
+      </div>
     </div>
   );
 };
