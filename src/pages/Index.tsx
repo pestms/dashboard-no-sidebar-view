@@ -3,17 +3,17 @@ import MetricCard from '@/components/MetricCard';
 import LeadSourcesChart from '@/components/LeadSourcesChart';
 import RevenueChart from '@/components/RevenueChart';
 import CompanyTable from '@/components/CompanyTable';
-import { Search, BarChart3, CheckSquare, FolderOpen, Users, Building2 } from 'lucide-react';
+import { Search, BarChart3, CheckSquare, FolderOpen, Users, Building2, TrendingUp, DollarSign, Target, Percent } from 'lucide-react';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="border-b border-gray-800 p-6">
+      <div className="border-b border-gray-800 p-6 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center animate-pulse">
                 <span className="text-white font-bold text-sm">A</span>
               </div>
               <div>
@@ -28,13 +28,13 @@ const Index = () => {
               <BarChart3 className="w-4 h-4" />
               <span className="text-sm">Dashboard</span>
             </div>
-            <button className="px-4 py-2 bg-gray-800 rounded-lg text-sm hover:bg-gray-700 transition-colors">
+            <button className="px-4 py-2 bg-gray-800 rounded-lg text-sm hover:bg-gray-700 transition-all duration-200 hover:scale-105">
               Import
             </button>
           </div>
         </div>
 
-        <div>
+        <div className="animate-fade-in">
           <h2 className="text-2xl font-bold mb-2">Welcome Back, John!</h2>
           <p className="text-gray-400">Today you have <span className="text-white font-medium">3 new leads</span>, <span className="text-white font-medium">2 follow-ups due</span></p>
         </div>
@@ -48,28 +48,28 @@ const Index = () => {
             value="$10,312.10"
             change="+20%($2,423)"
             changeType="positive"
-            icon={<div className="w-2 h-2 bg-green-400 rounded-full"></div>}
+            icon={<DollarSign className="w-6 h-6 text-green-400" />}
           />
           <MetricCard
             title="Total Sales Product"
             value="224"
             change="+20%(84)"
             changeType="positive"
-            icon={<div className="w-2 h-2 bg-blue-400 rounded-full"></div>}
+            icon={<TrendingUp className="w-6 h-6 text-blue-400" />}
           />
           <MetricCard
             title="Total Deals"
             value="3,612"
             change="-15%(134)"
             changeType="negative"
-            icon={<div className="w-2 h-2 bg-orange-400 rounded-full"></div>}
+            icon={<Target className="w-6 h-6 text-orange-400" />}
           />
           <MetricCard
             title="Conversion Rate"
             value="67%"
             change="+5%"
             changeType="positive"
-            icon={<div className="w-2 h-2 bg-purple-400 rounded-full"></div>}
+            icon={<Percent className="w-6 h-6 text-purple-400" />}
           />
         </div>
 
