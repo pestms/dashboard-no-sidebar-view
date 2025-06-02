@@ -82,6 +82,7 @@ export default function SalesQuotations() {
 
     dispatch(addQuotation({
       ...newQuotation,
+      leadId: 'sales-' + Date.now().toString(), // Generate a leadId for sales-created quotations
       estimatedValue: totalValue,
       validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     }));
