@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { CreateRevisionModal } from '@/components/CreateRevisionModal';
+import { QuotationVersions } from '@/components/QuotationVersions';
 
 export default function SalesQuotations() {
   const dispatch = useDispatch();
@@ -198,7 +199,7 @@ export default function SalesQuotations() {
                 <DialogTitle>Create New Quotation</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="customerName">Customer Name *</Label>
                     <Input
@@ -218,25 +219,25 @@ export default function SalesQuotations() {
                       className="bg-background border-border"
                     />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    value={newQuotation.phone}
-                    onChange={(e) => setNewQuotation({...newQuotation, phone: e.target.value})}
-                    className="bg-background border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="problemDescription">Problem Description</Label>
-                  <Textarea
-                    id="problemDescription"
-                    value={newQuotation.problemDescription}
-                    onChange={(e) => setNewQuotation({...newQuotation, problemDescription: e.target.value})}
-                    className="bg-background border-border"
-                    rows={3}
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      value={newQuotation.phone}
+                      onChange={(e) => setNewQuotation({...newQuotation, phone: e.target.value})}
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="problemDescription">Problem Description</Label>
+                    <Textarea
+                      id="problemDescription"
+                      value={newQuotation.problemDescription}
+                      onChange={(e) => setNewQuotation({...newQuotation, problemDescription: e.target.value})}
+                      className="bg-background border-border"
+                      rows={3}
+                    />
+                  </div>
                 </div>
                 <div>
                   <Label>Services & Pricing</Label>
@@ -376,6 +377,9 @@ export default function SalesQuotations() {
                       ))}
                   </div>
                 </div>
+
+                {/* Version History */}
+                <QuotationVersions quotation={quotation} />
 
                 {/* Actions */}
                 <div className="flex flex-col gap-2 pt-2 border-t md:flex-row md:flex-wrap">
