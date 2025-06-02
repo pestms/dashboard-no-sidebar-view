@@ -30,6 +30,12 @@ const agentMenuItems = [
   { title: 'My Leads', url: '/agent/leads', icon: Users },
 ];
 
+const salesMenuItems = [
+  { title: 'Profile', url: '/sales/profile', icon: UserCheck },
+  { title: 'Leads', url: '/sales/leads', icon: Users },
+  { title: 'Quotations', url: '/sales/quotations', icon: FileText },
+];
+
 export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,8 +46,18 @@ export function AppSidebar() {
     return userData ? JSON.parse(userData) : { name: 'Sarah Johnson', role: 'admin' };
   });
 
-  const isAgent = currentUser.role === 'agent';
-  const items = isAgent ? agentMenuItems : adminMenuItems;
+  const getMenuItems = () => {
+    switch (currentUser.role) {
+      case 'agent':
+        return agentMenuItems;
+      case 'sales':
+        return salesMenuItems;
+      default:
+        return adminMenuItems;
+    }
+  };
+
+  const items = getMenuItems();
 
   const handleLogout = () => {
     // Clear user data from localStorage

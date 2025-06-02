@@ -30,6 +30,9 @@ export default function Login() {
       if (email.includes('agent')) {
         userRole = 'agent';
         userName = 'Mike Wilson';
+      } else if (email.includes('sales')) {
+        userRole = 'sales';
+        userName = 'Alex Thompson';
       }
       
       // Store user data in localStorage
@@ -48,6 +51,8 @@ export default function Login() {
       // Navigate based on role
       if (userRole === 'agent') {
         navigate('/agent/profile');
+      } else if (userRole === 'sales') {
+        navigate('/sales/profile');
       } else {
         navigate('/');
       }
@@ -180,6 +185,7 @@ export default function Login() {
               <div className="text-xs text-blue-800 space-y-1">
                 <p><strong>Admin:</strong> admin@pestguard.com / password123</p>
                 <p><strong>Agent:</strong> agent@pestguard.com / password123</p>
+                <p><strong>Sales:</strong> sales@pestguard.com / password123</p>
                 <p className="italic">Note: Any email/password combination will work for demo purposes</p>
               </div>
             </div>
