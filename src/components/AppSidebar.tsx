@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,6 +40,7 @@ const salesMenuItems = [
 export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
   
   // Get user data from localStorage (set during login)
   const [currentUser] = useState(() => {
@@ -59,11 +61,23 @@ export function AppSidebar() {
 
   const items = getMenuItems();
 
+  const handleNavigation = (url: string) => {
+    navigate(url);
+    // Close sidebar on mobile after navigation
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   const handleLogout = () => {
     // Clear user data from localStorage
     localStorage.removeItem('currentUser');
     console.log('Logging out...');
     navigate('/login');
+    // Close sidebar on mobile after logout
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   return (
@@ -94,7 +108,7 @@ export function AppSidebar() {
                     isActive={location.pathname === item.url}
                     className="w-full justify-start px-3 py-2 rounded-lg"
                   >
-                    <button onClick={() => navigate(item.url)} className="flex items-center gap-3">
+                    <button onClick={() => handleNavigation(item.url)} className="flex items-center gap-3">
                       <item.icon className="w-5 h-5" />
                       <span className="font-medium">{item.title}</span>
                     </button>

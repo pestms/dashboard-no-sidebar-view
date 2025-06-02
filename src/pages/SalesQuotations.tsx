@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -6,7 +7,9 @@ import {
   setStatusFilter, 
   addQuotation,
   updateQuotation,
-  convertToContract
+  convertToContract,
+  createRevision,
+  toggleShowAllVersions
 } from '@/store/slices/quotationsSlice';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,15 +37,20 @@ import {
   Building,
   Home,
   DollarSign,
-  Calendar
+  Calendar,
+  GitBranch,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { CreateRevisionModal } from '@/components/CreateRevisionModal';
 
 export default function SalesQuotations() {
   const dispatch = useDispatch();
-  const { filteredQuotations, searchTerm, statusFilter } = useSelector((state: RootState) => state.quotations);
+  const { filteredQuotations, searchTerm, statusFilter, showAllVersions } = useSelector((state: RootState) => state.quotations);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedQuotationForRevision, setSelectedQuotationForRevision] = useState<string | null>(null);
   const [newQuotation, setNewQuotation] = useState({
     customerName: '',
     customerType: 'Residential' as 'Residential' | 'Commercial',
@@ -80,7 +88,7 @@ export default function SalesQuotations() {
 
     dispatch(addQuotation({
       ...newQuotation,
-      leadId: 'sales-' + Date.now().toString(), // Generate a leadId for sales-created quotations
+      leadId: 'sales-' + Date.now().toString(),
       estimatedValue: totalValue,
       validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     }));
@@ -130,6 +138,15 @@ export default function SalesQuotations() {
     });
   };
 
+  const handleCreateRevision = (quotationId: string, reason: string, changes: any) => {
+    dispatch(createRevision({ quotationId, reason, changes }));
+    setSelectedQuotationForRevision(null);
+    toast({
+      title: "Revision Created",
+      description: "A new revision has been created successfully.",
+    });
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -164,98 +181,108 @@ export default function SalesQuotations() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Quotations</h1>
           <p className="text-muted-foreground">({filteredQuotations.length} quotes)</p>
         </div>
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Quotation
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="mx-4 max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Create New Quotation</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2 md:flex-row md:gap-3">
+          <Button
+            variant="outline"
+            onClick={() => dispatch(toggleShowAllVersions())}
+            className="w-full md:w-auto"
+          >
+            {showAllVersions ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+            {showAllVersions ? 'Latest Only' : 'All Versions'}
+          </Button>
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Quotation
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="mx-4 max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Create New Quotation</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="customerName">Customer Name *</Label>
+                    <Input
+                      id="customerName"
+                      value={newQuotation.customerName}
+                      onChange={(e) => setNewQuotation({...newQuotation, customerName: e.target.value})}
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={newQuotation.email}
+                      onChange={(e) => setNewQuotation({...newQuotation, email: e.target.value})}
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
-                  <Label htmlFor="customerName">Customer Name *</Label>
+                  <Label htmlFor="phone">Phone</Label>
                   <Input
-                    id="customerName"
-                    value={newQuotation.customerName}
-                    onChange={(e) => setNewQuotation({...newQuotation, customerName: e.target.value})}
+                    id="phone"
+                    value={newQuotation.phone}
+                    onChange={(e) => setNewQuotation({...newQuotation, phone: e.target.value})}
                     className="bg-background border-border"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={newQuotation.email}
-                    onChange={(e) => setNewQuotation({...newQuotation, email: e.target.value})}
+                  <Label htmlFor="problemDescription">Problem Description</Label>
+                  <Textarea
+                    id="problemDescription"
+                    value={newQuotation.problemDescription}
+                    onChange={(e) => setNewQuotation({...newQuotation, problemDescription: e.target.value})}
                     className="bg-background border-border"
+                    rows={3}
                   />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  value={newQuotation.phone}
-                  onChange={(e) => setNewQuotation({...newQuotation, phone: e.target.value})}
-                  className="bg-background border-border"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="problemDescription">Problem Description</Label>
-                <Textarea
-                  id="problemDescription"
-                  value={newQuotation.problemDescription}
-                  onChange={(e) => setNewQuotation({...newQuotation, problemDescription: e.target.value})}
-                  className="bg-background border-border"
-                  rows={3}
-                />
-              </div>
-              <div>
-                <Label>Services & Pricing</Label>
-                <div className="mt-2 space-y-2">
-                  {newQuotation.services.map((service, index) => (
-                    <div key={service.name} className="flex justify-between items-center p-2 border rounded">
-                      <div className="flex-1">
-                        <span className="text-sm font-medium">{service.name}</span>
-                        <p className="text-xs text-muted-foreground">${service.price}</p>
+                <div>
+                  <Label>Services & Pricing</Label>
+                  <div className="mt-2 space-y-2">
+                    {newQuotation.services.map((service, index) => (
+                      <div key={service.name} className="flex justify-between items-center p-2 border rounded">
+                        <div className="flex-1">
+                          <span className="text-sm font-medium">{service.name}</span>
+                          <p className="text-xs text-muted-foreground">${service.price}</p>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={service.included}
+                          onChange={() => toggleService(index)}
+                          className="w-4 h-4"
+                        />
                       </div>
-                      <input
-                        type="checkbox"
-                        checked={service.included}
-                        onChange={() => toggleService(index)}
-                        className="w-4 h-4"
-                      />
-                    </div>
-                  ))}
-                  <div className="border-t pt-2">
-                    <div className="flex justify-between items-center font-semibold">
-                      <span>Total:</span>
-                      <span className="text-green-600">
-                        ${newQuotation.services
-                          .filter(service => service.included)
-                          .reduce((sum, service) => sum + service.price, 0)}
-                      </span>
+                    ))}
+                    <div className="border-t pt-2">
+                      <div className="flex justify-between items-center font-semibold">
+                        <span>Total:</span>
+                        <span className="text-green-600">
+                          ${newQuotation.services
+                            .filter(service => service.included)
+                            .reduce((sum, service) => sum + service.price, 0)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-col md:flex-row gap-2 pt-4">
-              <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="w-full md:w-auto">
-                Cancel
-              </Button>
-              <Button onClick={handleAddQuotation} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-                Create Quotation
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+              <div className="flex flex-col gap-2 pt-4 md:flex-row">
+                <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="w-full md:w-auto">
+                  Cancel
+                </Button>
+                <Button onClick={handleAddQuotation} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+                  Create Quotation
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -284,27 +311,36 @@ export default function SalesQuotations() {
         </Select>
       </div>
 
-      {/* Quotations List */}
+      {/* Mobile-friendly Quotations List */}
       <div className="space-y-4">
         {filteredQuotations.map((quotation) => (
           <Card key={quotation.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="space-y-3">
+                {/* Header with customer info and value */}
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3 flex-1">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {quotation.customerType === 'Commercial' ? 
-                        <Building className="w-4 h-4 text-muted-foreground" /> : 
-                        <Home className="w-4 h-4 text-muted-foreground" />
+                        <Building className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : 
+                        <Home className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                       }
-                      <div>
-                        <h3 className="font-medium">{quotation.customerName}</h3>
+                      <div className="min-w-0">
+                        <h3 className="font-medium truncate">{quotation.customerName}</h3>
                         <p className="text-sm text-muted-foreground">{quotation.customerType}</p>
-                        <p className="text-xs text-muted-foreground">ID: {quotation.id}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-muted-foreground">ID: {quotation.id}</p>
+                          {quotation.version > 1 && (
+                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
+                              <GitBranch className="w-3 h-3 mr-1" />
+                              v{quotation.version}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="font-semibold text-green-600 text-lg">
                       ${quotation.estimatedValue.toLocaleString()}
                     </p>
@@ -321,12 +357,17 @@ export default function SalesQuotations() {
                   </div>
                 </div>
 
+                {/* Contact info */}
                 <div className="space-y-1 text-sm text-muted-foreground">
-                  <p><span className="font-medium">Email:</span> {quotation.email}</p>
+                  <p className="truncate"><span className="font-medium">Email:</span> {quotation.email}</p>
                   <p><span className="font-medium">Phone:</span> {quotation.phone}</p>
                   <p><span className="font-medium">Sales Person:</span> {quotation.salesPerson}</p>
+                  {quotation.revisionReason && (
+                    <p className="text-blue-600"><span className="font-medium">Revision Reason:</span> {quotation.revisionReason}</p>
+                  )}
                 </div>
 
+                {/* Services */}
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Included Services:</p>
                   <div className="flex flex-wrap gap-1">
@@ -340,40 +381,56 @@ export default function SalesQuotations() {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-2 pt-2 border-t">
-                  <Select
-                    value={quotation.status}
-                    onValueChange={(value) => handleUpdateStatus(quotation.id, value as any)}
-                  >
-                    <SelectTrigger className="flex-1 bg-background border-border">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover border border-border">
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
-                      <SelectItem value="revised">Revised</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="px-3"
-                  >
-                    <Download className="w-4 h-4" />
-                  </Button>
-
-                  {quotation.status === 'approved' && (
-                    <Button
-                      size="sm"
-                      onClick={() => handleConvertToContract(quotation.id)}
-                      className="bg-green-600 hover:bg-green-700"
+                {/* Actions */}
+                <div className="flex flex-col gap-2 pt-2 border-t md:flex-row md:flex-wrap">
+                  <div className="flex flex-col gap-2 md:flex-row md:flex-1">
+                    <Select
+                      value={quotation.status}
+                      onValueChange={(value) => handleUpdateStatus(quotation.id, value as any)}
                     >
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Convert to Contract
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover border border-border">
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="approved">Approved</SelectItem>
+                        <SelectItem value="rejected">Rejected</SelectItem>
+                        <SelectItem value="revised">Revised</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full md:w-auto"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
                     </Button>
-                  )}
+                  </div>
+
+                  <div className="flex flex-col gap-2 md:flex-row">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedQuotationForRevision(quotation.id)}
+                      className="w-full md:w-auto"
+                    >
+                      <GitBranch className="w-4 h-4 mr-2" />
+                      Create Revision
+                    </Button>
+
+                    {quotation.status === 'approved' && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleConvertToContract(quotation.id)}
+                        className="bg-green-600 hover:bg-green-700 w-full md:w-auto"
+                      >
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Convert to Contract
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -386,6 +443,14 @@ export default function SalesQuotations() {
           <p className="text-muted-foreground">No quotations found matching your criteria.</p>
         </div>
       )}
+
+      {/* Revision Modal */}
+      <CreateRevisionModal
+        quotationId={selectedQuotationForRevision}
+        isOpen={!!selectedQuotationForRevision}
+        onClose={() => setSelectedQuotationForRevision(null)}
+        onCreateRevision={handleCreateRevision}
+      />
     </div>
   );
 }
