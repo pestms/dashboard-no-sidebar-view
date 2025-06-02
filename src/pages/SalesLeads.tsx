@@ -126,26 +126,26 @@ export default function SalesLeads() {
   };
 
   return (
-    <div className="space-y-4 p-4 md:space-y-6 md:p-6 animate-fade-in">
+    <div className="space-y-4 p-2 sm:p-4 md:space-y-6 md:p-6 animate-fade-in max-w-full overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">My Leads</h1>
-          <p className="text-muted-foreground">({filteredLeads.length} leads)</p>
+      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">My Leads</h1>
+          <p className="text-muted-foreground text-sm">({filteredLeads.length} leads)</p>
         </div>
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto">
+            <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               Add Lead
             </Button>
           </DialogTrigger>
-          <DialogContent className="mx-4 max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
+          <DialogContent className="mx-2 w-[calc(100vw-1rem)] max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Add New Lead</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="customerName">Customer Name *</Label>
                   <Input
@@ -174,7 +174,7 @@ export default function SalesLeads() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number *</Label>
                   <Input
@@ -206,7 +206,7 @@ export default function SalesLeads() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="priority">Priority</Label>
                   <Select
@@ -248,11 +248,11 @@ export default function SalesLeads() {
                 />
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-2 pt-4">
-              <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="w-full md:w-auto">
+            <div className="flex flex-col sm:flex-row gap-2 pt-4">
+              <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button onClick={handleAddLead} className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto">
+              <Button onClick={handleAddLead} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
                 Add Lead
               </Button>
             </div>
@@ -261,8 +261,8 @@ export default function SalesLeads() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col space-y-3 md:flex-row md:gap-4 md:items-center md:space-y-0">
-        <div className="relative flex-1">
+      <div className="flex flex-col space-y-3 sm:flex-row sm:gap-4 sm:items-center sm:space-y-0">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
             placeholder="Search leads..."
@@ -272,9 +272,9 @@ export default function SalesLeads() {
           />
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full sm:w-auto">
           <Select value={statusFilter} onValueChange={(value) => dispatch(setStatusFilter(value))}>
-            <SelectTrigger className="w-full md:w-40 bg-background border-border">
+            <SelectTrigger className="flex-1 sm:w-32 bg-background border-border">
               <Filter className="w-4 h-4 mr-2" />
               <SelectValue />
             </SelectTrigger>
@@ -287,7 +287,7 @@ export default function SalesLeads() {
           </Select>
 
           <Select value={priorityFilter} onValueChange={(value) => dispatch(setPriorityFilter(value))}>
-            <SelectTrigger className="w-full md:w-40 bg-background border-border">
+            <SelectTrigger className="flex-1 sm:w-32 bg-background border-border">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-popover border border-border">
@@ -304,18 +304,18 @@ export default function SalesLeads() {
       <div className="space-y-4">
         {filteredLeads.map((lead) => (
           <Card key={lead.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="space-y-3">
                 {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     {lead.customerType === 'Commercial' ? 
-                      <Building className="w-4 h-4 text-muted-foreground" /> : 
-                      <Home className="w-4 h-4 text-muted-foreground" />
+                      <Building className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : 
+                      <Home className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     }
-                    <h3 className="font-semibold">{lead.customerName}</h3>
+                    <h3 className="font-semibold text-sm sm:text-base truncate">{lead.customerName}</h3>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:gap-2 flex-shrink-0">
                     <Badge 
                       variant="outline" 
                       className={`text-xs ${getPriorityColor(lead.priority)}`}
@@ -324,7 +324,7 @@ export default function SalesLeads() {
                     </Badge>
                     <Badge 
                       variant="outline" 
-                      className={getStatusColor(lead.status)}
+                      className={`text-xs ${getStatusColor(lead.status)}`}
                     >
                       {lead.status}
                     </Badge>
@@ -332,52 +332,55 @@ export default function SalesLeads() {
                 </div>
 
                 {/* Service Details */}
-                <p className="text-sm text-muted-foreground">{lead.serviceDetails || lead.problemDescription}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2">{lead.serviceDetails || lead.problemDescription}</p>
 
                 {/* Contact Info */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="w-3 h-3 text-muted-foreground" />
-                    <span>{lead.phone}</span>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Phone className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                    <span className="truncate">{lead.phone}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="w-3 h-3 text-muted-foreground" />
-                    <span>{lead.email}</span>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Mail className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                    <span className="truncate">{lead.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="w-3 h-3 text-muted-foreground" />
-                    <span>{lead.address}</span>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                    <span className="truncate">{lead.address}</span>
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-2 border-t">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex flex-col gap-3 pt-2 border-t sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4 text-xs sm:text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <DollarSign className="w-3 h-3" />
                       <span>${lead.estimatedValue}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
-                      <span>{lead.lastContact}</span>
+                      <span className="truncate">{lead.lastContact}</span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleViewDetails(lead)}
+                      className="flex-1 sm:flex-initial"
                     >
                       <Eye className="w-4 h-4 mr-2" />
-                      View Details
+                      <span className="hidden sm:inline">View Details</span>
+                      <span className="sm:hidden">Details</span>
                     </Button>
                     <Button
                       size="sm"
                       onClick={() => handleCreateQuotation(lead)}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-initial"
                     >
                       <FileText className="w-4 h-4 mr-2" />
-                      Create Quote
+                      <span className="hidden sm:inline">Create Quote</span>
+                      <span className="sm:hidden">Quote</span>
                     </Button>
                   </div>
                 </div>
