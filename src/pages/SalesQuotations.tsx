@@ -8,11 +8,10 @@ import {
   updateQuotation,
   convertToContract
 } from '@/store/slices/quotationsSlice';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Select,
   SelectContent,
@@ -30,18 +29,17 @@ import {
   CheckCircle, 
   XCircle, 
   Clock, 
-  ArrowLeft,
-  User,
-  Users,
   Download,
-  Edit
+  Edit,
+  Building,
+  Home,
+  DollarSign,
+  Calendar
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 export default function SalesQuotations() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { filteredQuotations, searchTerm, statusFilter } = useSelector((state: RootState) => state.quotations);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -88,6 +86,7 @@ export default function SalesQuotations() {
     }));
 
     setIsAddModalOpen(false);
+    
     setNewQuotation({
       customerName: '',
       customerType: 'Residential',
@@ -158,35 +157,26 @@ export default function SalesQuotations() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Header */}
-      <div className="bg-green-600 text-white p-4 sticky top-0 z-10">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-white hover:bg-green-700 p-1"
-              onClick={() => navigate('/sales/profile')}
-            >
-              <ArrowLeft className="w-5 h-5" />
+    <div className="space-y-4 p-4 md:space-y-6 md:p-6 animate-fade-in">
+      {/* Header */}
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Quotations</h1>
+          <p className="text-muted-foreground">({filteredQuotations.length} quotes)</p>
+        </div>
+        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Quotation
             </Button>
-            <div>
-              <h1 className="text-lg font-semibold">Quotations</h1>
-              <p className="text-green-100 text-sm">({filteredQuotations.length} quotes)</p>
-            </div>
-          </div>
-          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="bg-white text-green-600 hover:bg-gray-100">
-                <Plus className="w-4 h-4" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-[95vw] max-w-lg mx-auto max-h-[80vh] overflow-y-auto bg-card border border-border">
-              <DialogHeader>
-                <DialogTitle>Create New Quotation</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
+          </DialogTrigger>
+          <DialogContent className="mx-4 max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Create New Quotation</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="customerName">Customer Name *</Label>
                   <Input
@@ -206,149 +196,111 @@ export default function SalesQuotations() {
                     className="bg-background border-border"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    value={newQuotation.phone}
-                    onChange={(e) => setNewQuotation({...newQuotation, phone: e.target.value})}
-                    className="bg-background border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="problemDescription">Problem Description</Label>
-                  <Textarea
-                    id="problemDescription"
-                    value={newQuotation.problemDescription}
-                    onChange={(e) => setNewQuotation({...newQuotation, problemDescription: e.target.value})}
-                    className="bg-background border-border"
-                    rows={3}
-                  />
-                </div>
-                <div>
-                  <Label>Services & Pricing</Label>
-                  <div className="mt-2 space-y-2">
-                    {newQuotation.services.map((service, index) => (
-                      <div key={service.name} className="flex justify-between items-center p-2 border rounded">
-                        <div className="flex-1">
-                          <span className="text-sm font-medium">{service.name}</span>
-                          <p className="text-xs text-muted-foreground">${service.price}</p>
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={service.included}
-                          onChange={() => toggleService(index)}
-                          className="w-4 h-4"
-                        />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  value={newQuotation.phone}
+                  onChange={(e) => setNewQuotation({...newQuotation, phone: e.target.value})}
+                  className="bg-background border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="problemDescription">Problem Description</Label>
+                <Textarea
+                  id="problemDescription"
+                  value={newQuotation.problemDescription}
+                  onChange={(e) => setNewQuotation({...newQuotation, problemDescription: e.target.value})}
+                  className="bg-background border-border"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label>Services & Pricing</Label>
+                <div className="mt-2 space-y-2">
+                  {newQuotation.services.map((service, index) => (
+                    <div key={service.name} className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex-1">
+                        <span className="text-sm font-medium">{service.name}</span>
+                        <p className="text-xs text-muted-foreground">${service.price}</p>
                       </div>
-                    ))}
-                    <div className="border-t pt-2">
-                      <div className="flex justify-between items-center font-semibold">
-                        <span>Total:</span>
-                        <span className="text-green-600">
-                          ${newQuotation.services
-                            .filter(service => service.included)
-                            .reduce((sum, service) => sum + service.price, 0)}
-                        </span>
-                      </div>
+                      <input
+                        type="checkbox"
+                        checked={service.included}
+                        onChange={() => toggleService(index)}
+                        className="w-4 h-4"
+                      />
+                    </div>
+                  ))}
+                  <div className="border-t pt-2">
+                    <div className="flex justify-between items-center font-semibold">
+                      <span>Total:</span>
+                      <span className="text-green-600">
+                        ${newQuotation.services
+                          .filter(service => service.included)
+                          .reduce((sum, service) => sum + service.price, 0)}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-end gap-2 pt-4">
-                <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddQuotation} className="bg-green-600 hover:bg-green-700">
-                  Create Quotation
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+            </div>
+            <div className="flex flex-col md:flex-row gap-2 pt-4">
+              <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="w-full md:w-auto">
+                Cancel
+              </Button>
+              <Button onClick={handleAddQuotation} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+                Create Quotation
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="bg-white border-b border-border sticky top-16 z-10">
-        <div className="flex overflow-x-auto">
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none"
-            onClick={() => navigate('/sales/profile')}
-          >
-            <User className="w-4 h-4 mr-2" />
-            Profile
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none"
-            onClick={() => navigate('/sales/leads')}
-          >
-            <Users className="w-4 h-4 mr-2" />
-            Leads
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none border-b-2 border-green-600 text-green-600"
-            onClick={() => navigate('/sales/quotations')}
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Quotes
-          </Button>
+      {/* Search and Filters */}
+      <div className="flex flex-col space-y-3 md:flex-row md:gap-4 md:items-center md:space-y-0">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder="Search quotations..."
+            value={searchTerm}
+            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+            className="pl-10 bg-background border-border"
+          />
         </div>
+        
+        <Select value={statusFilter} onValueChange={(value) => dispatch(setStatusFilter(value))}>
+          <SelectTrigger className="w-full md:w-40 bg-background border-border">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-popover border border-border">
+            <SelectItem value="All">All Status</SelectItem>
+            <SelectItem value="Pending">Pending</SelectItem>
+            <SelectItem value="Approved">Approved</SelectItem>
+            <SelectItem value="Rejected">Rejected</SelectItem>
+            <SelectItem value="Revised">Revised</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="p-4 space-y-4">
-        {/* Search and Filters */}
-        <div className="space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search quotations..."
-              value={searchTerm}
-              onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-              className="pl-10 bg-background border-border"
-            />
-          </div>
-          
-          <Select value={statusFilter} onValueChange={(value) => dispatch(setStatusFilter(value))}>
-            <SelectTrigger className="w-full bg-background border-border">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-popover border border-border">
-              <SelectItem value="All">All Status</SelectItem>
-              <SelectItem value="Pending">Pending</SelectItem>
-              <SelectItem value="Approved">Approved</SelectItem>
-              <SelectItem value="Rejected">Rejected</SelectItem>
-              <SelectItem value="Revised">Revised</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Quotations List */}
-        <div className="space-y-4">
-          {filteredQuotations.map((quotation) => (
-            <Card key={quotation.id} className="p-4">
+      {/* Quotations List */}
+      <div className="space-y-4">
+        {filteredQuotations.map((quotation) => (
+          <Card key={quotation.id} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3 flex-1">
-                    <Avatar className="w-10 h-10 bg-blue-100">
-                      <AvatarFallback className="text-blue-700">
-                        <FileText className="w-5 h-5" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate">{quotation.customerName}</h3>
-                      <p className="text-sm text-muted-foreground">{quotation.customerType}</p>
-                      <p className="text-xs text-muted-foreground">ID: {quotation.id}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge 
-                          variant="outline" 
-                          className={`text-xs ${getStatusColor(quotation.status)} flex items-center gap-1`}
-                        >
-                          {getStatusIcon(quotation.status)}
-                          {quotation.status}
-                        </Badge>
+                    <div className="flex items-center gap-2">
+                      {quotation.customerType === 'Commercial' ? 
+                        <Building className="w-4 h-4 text-muted-foreground" /> : 
+                        <Home className="w-4 h-4 text-muted-foreground" />
+                      }
+                      <div>
+                        <h3 className="font-medium">{quotation.customerName}</h3>
+                        <p className="text-sm text-muted-foreground">{quotation.customerType}</p>
+                        <p className="text-xs text-muted-foreground">ID: {quotation.id}</p>
                       </div>
                     </div>
                   </div>
@@ -359,6 +311,13 @@ export default function SalesQuotations() {
                     <p className="text-xs text-muted-foreground">
                       Valid: {quotation.validUntil}
                     </p>
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs ${getStatusColor(quotation.status)} flex items-center gap-1 mt-1`}
+                    >
+                      {getStatusIcon(quotation.status)}
+                      {quotation.status}
+                    </Badge>
                   </div>
                 </div>
 
@@ -381,7 +340,7 @@ export default function SalesQuotations() {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col md:flex-row gap-2 pt-2 border-t">
                   <Select
                     value={quotation.status}
                     onValueChange={(value) => handleUpdateStatus(quotation.id, value as any)}
@@ -404,23 +363,29 @@ export default function SalesQuotations() {
                   >
                     <Download className="w-4 h-4" />
                   </Button>
-                </div>
 
-                {quotation.status === 'approved' && (
-                  <Button
-                    size="sm"
-                    onClick={() => handleConvertToContract(quotation.id)}
-                    className="w-full bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Convert to Contract
-                  </Button>
-                )}
+                  {quotation.status === 'approved' && (
+                    <Button
+                      size="sm"
+                      onClick={() => handleConvertToContract(quotation.id)}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Convert to Contract
+                    </Button>
+                  )}
+                </div>
               </div>
-            </Card>
-          ))}
-        </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
+      {filteredQuotations.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No quotations found matching your criteria.</p>
+        </div>
+      )}
     </div>
   );
 }

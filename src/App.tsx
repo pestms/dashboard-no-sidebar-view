@@ -46,24 +46,6 @@ function AppContent() {
     return <Login />;
   }
 
-  // For sales role, use mobile-optimized layout
-  if (currentUser?.role === 'sales') {
-    return (
-      <div className="min-h-screen bg-background">
-        <main className="w-full">
-          <Routes>
-            <Route path="/sales/profile" element={<SalesProfile />} />
-            <Route path="/sales/leads" element={<SalesLeads />} />
-            <Route path="/sales/quotations" element={<SalesQuotations />} />
-            <Route path="/" element={<SalesProfile />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </div>
-    );
-  }
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -82,6 +64,9 @@ function AppContent() {
               <Route path="/users/:userId" element={<UserDetails />} />
               <Route path="/agent/profile" element={<AgentProfile />} />
               <Route path="/agent/leads" element={<AgentLeads />} />
+              <Route path="/sales/profile" element={<SalesProfile />} />
+              <Route path="/sales/leads" element={<SalesLeads />} />
+              <Route path="/sales/quotations" element={<SalesQuotations />} />
               <Route path="/login" element={<Login />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

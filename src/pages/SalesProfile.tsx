@@ -13,11 +13,8 @@ import {
   Target,
   CheckCircle,
   TrendingUp,
-  Home,
   FileText
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
 
 // Mock sales agent data
 const mockSalesAgent = {
@@ -34,8 +31,6 @@ const mockSalesAgent = {
 };
 
 export default function SalesProfile() {
-  const navigate = useNavigate();
-
   const getRoleIcon = (role: string) => {
     return <Users className="w-4 h-4" />;
   };
@@ -77,143 +72,66 @@ export default function SalesProfile() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Header */}
-      <div className="bg-green-600 text-white p-4 sticky top-0 z-10">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-semibold">PestGuard CRM</h1>
-            <p className="text-green-100 text-sm">Sales Dashboard</p>
-          </div>
-          <Avatar className="w-10 h-10">
-            <AvatarImage src={mockSalesAgent.avatar} alt={mockSalesAgent.name} />
-            <AvatarFallback className="bg-green-700 text-white">
-              {mockSalesAgent.name.split(' ').map(n => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
-        </div>
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
+      <div>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Personal Details</h1>
+        <p className="text-muted-foreground">Your profile and performance overview</p>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="bg-white border-b border-border sticky top-16 z-10">
-        <div className="flex overflow-x-auto">
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none border-b-2 border-green-600 text-green-600"
-            onClick={() => navigate('/sales/profile')}
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Profile
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none"
-            onClick={() => navigate('/sales/leads')}
-          >
-            <Users className="w-4 h-4 mr-2" />
-            Leads
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none"
-            onClick={() => navigate('/sales/quotations')}
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Quotes
-          </Button>
-        </div>
-      </div>
-
-      <div className="p-4 space-y-4">
-        {/* User Profile Section */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              {/* Profile Image */}
-              <Avatar className="w-20 h-20">
+      {/* User Profile Section */}
+      <Card>
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col items-center space-y-4 md:flex-row md:items-start md:space-y-0 md:space-x-6">
+            {/* Profile Image */}
+            <div className="flex flex-col items-center space-y-4">
+              <Avatar className="w-24 h-24 md:w-32 md:h-32">
                 <AvatarImage src={mockSalesAgent.avatar} alt={mockSalesAgent.name} />
-                <AvatarFallback className="text-lg font-bold">
+                <AvatarFallback className="text-xl md:text-2xl font-bold">
                   {mockSalesAgent.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              
-              <div className="space-y-2">
-                <h2 className="text-xl font-bold">{mockSalesAgent.name}</h2>
-                <Badge 
-                  variant="outline" 
-                  className={`${getRoleBadgeColor(mockSalesAgent.role)} flex items-center gap-1`}
-                >
-                  {getRoleIcon(mockSalesAgent.role)}
-                  Sales Agent
-                </Badge>
+              <Badge 
+                variant="outline" 
+                className={`${getRoleBadgeColor(mockSalesAgent.role)} flex items-center gap-1`}
+              >
+                {getRoleIcon(mockSalesAgent.role)}
+                {mockSalesAgent.role}
+              </Badge>
+            </div>
+
+            {/* User Details */}
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold">{mockSalesAgent.name}</h2>
                 <p className="text-muted-foreground">{mockSalesAgent.department}</p>
               </div>
               
-              <div className="w-full space-y-3">
-                <div className="flex items-center justify-center gap-2">
+              <div className="grid grid-cols-1 gap-3">
+                <div className="flex items-center justify-center md:justify-start gap-2">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm">{mockSalesAgent.email}</span>
                 </div>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center md:justify-start gap-2">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm">{mockSalesAgent.phone}</span>
                 </div>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center md:justify-start gap-2">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm">Joined {mockSalesAgent.createdAt}</span>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex items-center justify-center md:justify-start gap-2">
                   <Badge variant={mockSalesAgent.status === 'active' ? 'default' : 'secondary'}>
                     {mockSalesAgent.status}
                   </Badge>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Performance Stats - Mobile Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          {salesStats.map((stat, index) => (
-            <Card key={index} className="p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="p-1 bg-green-100 rounded">
-                  {stat.icon}
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs text-muted-foreground">{stat.title}</p>
-                <p className="text-lg font-bold">{stat.value}</p>
-                <p className="text-xs text-green-600">{stat.change}</p>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* Quick Actions */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-3">Quick Actions</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <Button 
-                className="h-12 bg-green-600 hover:bg-green-700"
-                onClick={() => navigate('/sales/leads')}
-              >
-                <Users className="w-4 h-4 mr-2" />
-                View Leads
-              </Button>
-              <Button 
-                variant="outline" 
-                className="h-12"
-                onClick={() => navigate('/sales/quotations')}
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                Create Quote
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Performance Stats */}
+      <StatsContainer stats={salesStats} />
     </div>
   );
 }

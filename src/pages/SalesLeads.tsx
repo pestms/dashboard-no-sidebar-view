@@ -13,9 +13,8 @@ import { LeadDetailsModal } from '@/components/LeadDetailsModal';
 import { QuotationModal } from '@/components/QuotationModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Select,
   SelectContent,
@@ -37,16 +36,13 @@ import {
   MapPin, 
   Building, 
   Home, 
-  User,
-  Users,
-  ArrowLeft
+  DollarSign,
+  Calendar
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 export default function SalesLeads() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { filteredLeads, searchTerm, statusFilter, priorityFilter } = useSelector((state: RootState) => state.leads);
   
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -129,46 +125,62 @@ export default function SalesLeads() {
     }
   };
 
-  const getCustomerIcon = (type: string) => {
-    return type === 'Commercial' ? <Building className="w-4 h-4" /> : <Home className="w-4 h-4" />;
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Header */}
-      <div className="bg-green-600 text-white p-4 sticky top-0 z-10">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-white hover:bg-green-700 p-1"
-              onClick={() => navigate('/sales/profile')}
-            >
-              <ArrowLeft className="w-5 h-5" />
+    <div className="space-y-4 p-4 md:space-y-6 md:p-6 animate-fade-in">
+      {/* Header */}
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">My Leads</h1>
+          <p className="text-muted-foreground">({filteredLeads.length} leads)</p>
+        </div>
+        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Lead
             </Button>
-            <div>
-              <h1 className="text-lg font-semibold">Leads</h1>
-              <p className="text-green-100 text-sm">({filteredLeads.length} leads)</p>
-            </div>
-          </div>
-          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="bg-white text-green-600 hover:bg-gray-100">
-                <Plus className="w-4 h-4" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-[95vw] max-w-md mx-auto bg-card border border-border">
-              <DialogHeader>
-                <DialogTitle>Add New Lead</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
+          </DialogTrigger>
+          <DialogContent className="mx-4 max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add New Lead</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="customerName">Customer Name *</Label>
                   <Input
                     id="customerName"
                     value={newLead.customerName}
                     onChange={(e) => setNewLead({...newLead, customerName: e.target.value})}
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="customerType">Customer Type</Label>
+                  <Select
+                    value={newLead.customerType}
+                    onValueChange={(value: 'Residential' | 'Commercial') => 
+                      setNewLead({...newLead, customerType: value})
+                    }
+                  >
+                    <SelectTrigger className="bg-background border-border">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border border-border">
+                      <SelectItem value="Residential">Residential</SelectItem>
+                      <SelectItem value="Commercial">Commercial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Input
+                    id="phone"
+                    value={newLead.phone}
+                    onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
                     className="bg-background border-border"
                   />
                 </div>
@@ -182,190 +194,204 @@ export default function SalesLeads() {
                     className="bg-background border-border"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  value={newLead.address}
+                  onChange={(e) => setNewLead({...newLead, address: e.target.value})}
+                  className="bg-background border-border"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone *</Label>
+                  <Label htmlFor="priority">Priority</Label>
+                  <Select
+                    value={newLead.priority}
+                    onValueChange={(value: 'low' | 'medium' | 'high') => 
+                      setNewLead({...newLead, priority: value})
+                    }
+                  >
+                    <SelectTrigger className="bg-background border-border">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border border-border">
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="estimatedValue">Estimated Value ($)</Label>
                   <Input
-                    id="phone"
-                    value={newLead.phone}
-                    onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
+                    id="estimatedValue"
+                    type="number"
+                    value={newLead.estimatedValue}
+                    onChange={(e) => setNewLead({...newLead, estimatedValue: Number(e.target.value)})}
                     className="bg-background border-border"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="problemDescription">Problem Description</Label>
-                  <Textarea
-                    id="problemDescription"
-                    value={newLead.problemDescription}
-                    onChange={(e) => setNewLead({...newLead, problemDescription: e.target.value, serviceDetails: e.target.value})}
-                    className="bg-background border-border"
-                    rows={3}
-                  />
-                </div>
               </div>
-              <div className="flex justify-end gap-2 pt-4">
-                <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddLead} className="bg-green-600 hover:bg-green-700">
-                  Add Lead
-                </Button>
+
+              <div className="space-y-2">
+                <Label htmlFor="serviceDetails">Service Details</Label>
+                <Textarea
+                  id="serviceDetails"
+                  value={newLead.serviceDetails}
+                  onChange={(e) => setNewLead({...newLead, serviceDetails: e.target.value, problemDescription: e.target.value})}
+                  className="bg-background border-border"
+                  rows={3}
+                />
               </div>
-            </DialogContent>
-          </Dialog>
+            </div>
+            <div className="flex flex-col md:flex-row gap-2 pt-4">
+              <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="w-full md:w-auto">
+                Cancel
+              </Button>
+              <Button onClick={handleAddLead} className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto">
+                Add Lead
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="flex flex-col space-y-3 md:flex-row md:gap-4 md:items-center md:space-y-0">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder="Search leads..."
+            value={searchTerm}
+            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+            className="pl-10 bg-background border-border"
+          />
+        </div>
+        
+        <div className="flex gap-2">
+          <Select value={statusFilter} onValueChange={(value) => dispatch(setStatusFilter(value))}>
+            <SelectTrigger className="w-full md:w-40 bg-background border-border">
+              <Filter className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-popover border border-border">
+              <SelectItem value="All">All Status</SelectItem>
+              <SelectItem value="Lead">Lead</SelectItem>
+              <SelectItem value="Quote">Quote</SelectItem>
+              <SelectItem value="Contract">Contract</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={priorityFilter} onValueChange={(value) => dispatch(setPriorityFilter(value))}>
+            <SelectTrigger className="w-full md:w-40 bg-background border-border">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-popover border border-border">
+              <SelectItem value="All">All Priority</SelectItem>
+              <SelectItem value="High">High</SelectItem>
+              <SelectItem value="Medium">Medium</SelectItem>
+              <SelectItem value="Low">Low</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="bg-white border-b border-border sticky top-16 z-10">
-        <div className="flex overflow-x-auto">
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none"
-            onClick={() => navigate('/sales/profile')}
-          >
-            <User className="w-4 h-4 mr-2" />
-            Profile
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none border-b-2 border-green-600 text-green-600"
-            onClick={() => navigate('/sales/leads')}
-          >
-            <Users className="w-4 h-4 mr-2" />
-            Leads
-          </Button>
-          <Button 
-            variant="ghost" 
-            className="flex-1 min-w-0 rounded-none"
-            onClick={() => navigate('/sales/quotations')}
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Quotes
-          </Button>
-        </div>
-      </div>
-
-      <div className="p-4 space-y-4">
-        {/* Search and Filters */}
-        <div className="space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search leads..."
-              value={searchTerm}
-              onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-              className="pl-10 bg-background border-border"
-            />
-          </div>
-          
-          <div className="flex gap-2">
-            <Select value={statusFilter} onValueChange={(value) => dispatch(setStatusFilter(value))}>
-              <SelectTrigger className="flex-1 bg-background border-border">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border border-border">
-                <SelectItem value="All">All Status</SelectItem>
-                <SelectItem value="Lead">Lead</SelectItem>
-                <SelectItem value="Quote">Quote</SelectItem>
-                <SelectItem value="Contract">Contract</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={priorityFilter} onValueChange={(value) => dispatch(setPriorityFilter(value))}>
-              <SelectTrigger className="flex-1 bg-background border-border">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border border-border">
-                <SelectItem value="All">All Priority</SelectItem>
-                <SelectItem value="High">High</SelectItem>
-                <SelectItem value="Medium">Medium</SelectItem>
-                <SelectItem value="Low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Leads List */}
-        <div className="space-y-3">
-          {filteredLeads.map((lead) => (
-            <Card key={lead.id} className="p-4">
+      {/* Leads Cards */}
+      <div className="space-y-4">
+        {filteredLeads.map((lead) => (
+          <Card key={lead.id} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
               <div className="space-y-3">
+                {/* Header */}
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3 flex-1">
-                    <Avatar className="w-10 h-10 bg-green-100">
-                      <AvatarFallback className="text-green-700">
-                        {getCustomerIcon(lead.customerType)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate">{lead.customerName}</h3>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        {getCustomerIcon(lead.customerType)}
-                        {lead.customerType}
-                      </p>
-                      <div className="flex gap-2 mt-1">
-                        <Badge 
-                          variant="outline" 
-                          className={`text-xs ${getPriorityColor(lead.priority)}`}
-                        >
-                          {lead.priority}
-                        </Badge>
-                        <Badge 
-                          variant="outline" 
-                          className={getStatusColor(lead.status)}
-                        >
-                          {lead.status}
-                        </Badge>
-                      </div>
+                  <div className="flex items-center gap-2">
+                    {lead.customerType === 'Commercial' ? 
+                      <Building className="w-4 h-4 text-muted-foreground" /> : 
+                      <Home className="w-4 h-4 text-muted-foreground" />
+                    }
+                    <h3 className="font-semibold">{lead.customerName}</h3>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs ${getPriorityColor(lead.priority)}`}
+                    >
+                      {lead.priority}
+                    </Badge>
+                    <Badge 
+                      variant="outline" 
+                      className={getStatusColor(lead.status)}
+                    >
+                      {lead.status}
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Service Details */}
+                <p className="text-sm text-muted-foreground">{lead.serviceDetails || lead.problemDescription}</p>
+
+                {/* Contact Info */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="w-3 h-3 text-muted-foreground" />
+                    <span>{lead.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="w-3 h-3 text-muted-foreground" />
+                    <span>{lead.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin className="w-3 h-3 text-muted-foreground" />
+                    <span>{lead.address}</span>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-2 border-t">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <DollarSign className="w-3 h-3" />
+                      <span>${lead.estimatedValue}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      <span>{lead.lastContact}</span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-green-600">
-                      ${lead.estimatedValue.toLocaleString()}
-                    </p>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewDetails(lead)}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Details
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => handleCreateQuotation(lead)}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Create Quote
+                    </Button>
                   </div>
-                </div>
-
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-3 h-3" />
-                    <span className="truncate">{lead.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-3 h-3" />
-                    <span className="truncate">{lead.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-3 h-3" />
-                    <span className="truncate">{lead.address}</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleViewDetails(lead)}
-                    className="flex-1"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    View Details
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={() => handleCreateQuotation(lead)}
-                    className="flex-1 bg-green-600 hover:bg-green-700"
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Create Quote
-                  </Button>
                 </div>
               </div>
-            </Card>
-          ))}
-        </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
+      {filteredLeads.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No leads found matching your criteria.</p>
+        </div>
+      )}
 
       <LeadDetailsModal
         lead={selectedLead}
