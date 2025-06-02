@@ -47,7 +47,7 @@ import { CreateRevisionModal } from '@/components/CreateRevisionModal';
 
 export default function SalesQuotations() {
   const dispatch = useDispatch();
-  const { filteredQuotations, searchTerm, statusFilter, showAllVersions } = useSelector((state: RootState) => state.quotations);
+  const { filteredQuotations, searchTerm, statusFilter, showAllVersions, quotations } = useSelector((state: RootState) => state.quotations);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedQuotationForRevision, setSelectedQuotationForRevision] = useState<string | null>(null);
@@ -138,15 +138,6 @@ export default function SalesQuotations() {
     });
   };
 
-  const handleCreateRevision = (quotationId: string, reason: string, changes: any) => {
-    dispatch(createRevision({ quotationId, reason, changes }));
-    setSelectedQuotationForRevision(null);
-    toast({
-      title: "Revision Created",
-      description: "A new revision has been created successfully.",
-    });
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -172,6 +163,11 @@ export default function SalesQuotations() {
     updatedServices[index].included = !updatedServices[index].included;
     setNewQuotation({ ...newQuotation, services: updatedServices });
   };
+
+  // Get the selected quotation for revision
+  const selectedQuotation = selectedQuotationForRevision 
+    ? quotations.find(q => q.id === selectedQuotationForRevision) || null
+    : null;
 
   return (
     <div className="space-y-4 p-4 md:space-y-6 md:p-6 animate-fade-in">
@@ -446,10 +442,9 @@ export default function SalesQuotations() {
 
       {/* Revision Modal */}
       <CreateRevisionModal
-        quotationId={selectedQuotationForRevision}
+        quotation={selectedQuotation}
         isOpen={!!selectedQuotationForRevision}
         onClose={() => setSelectedQuotationForRevision(null)}
-        onCreateRevision={handleCreateRevision}
       />
     </div>
   );
