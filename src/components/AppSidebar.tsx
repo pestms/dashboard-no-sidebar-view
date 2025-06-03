@@ -1,5 +1,5 @@
 
-import { Home, Users, FileText, Settings, BarChart3, UserCheck, LogOut } from 'lucide-react';
+import { Home, Users, FileText, Settings, BarChart3, UserCheck, LogOut, Sun, Moon } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const adminMenuItems = [
   { title: 'Dashboard', url: '/', icon: Home },
@@ -41,6 +42,7 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isMobile, setOpenMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
   
   // Get user data from localStorage (set during login)
   const [currentUser] = useState(() => {
@@ -116,6 +118,34 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+            Theme
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <div className="flex gap-2 px-3">
+              <Button
+                variant={theme === 'light' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTheme('light')}
+                className="flex-1 gap-2"
+              >
+                <Sun className="w-4 h-4" />
+                Light
+              </Button>
+              <Button
+                variant={theme === 'dark' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTheme('dark')}
+                className="flex-1 gap-2"
+              >
+                <Moon className="w-4 h-4" />
+                Dark
+              </Button>
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
