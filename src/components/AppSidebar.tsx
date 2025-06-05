@@ -1,5 +1,5 @@
 
-import { Home, Users, FileText, Settings, BarChart3, UserCheck, LogOut, Sun, Moon } from 'lucide-react';
+import { Home, Users, FileText, Settings, BarChart3, UserCheck, LogOut, Sun, Moon, Wrench } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -22,6 +22,7 @@ const adminMenuItems = [
   { title: 'Dashboard', url: '/', icon: Home },
   { title: 'Leads', url: '/leads', icon: Users },
   { title: 'Quotations', url: '/quotations', icon: FileText },
+  { title: 'Services Management', url: '/services', icon: Wrench },
   { title: 'Analytics', url: '/analytics', icon: BarChart3 },
   { title: 'User Management', url: '/users', icon: UserCheck },
   { title: 'Settings', url: '/settings', icon: Settings },

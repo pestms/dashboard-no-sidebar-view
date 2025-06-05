@@ -15,6 +15,7 @@ import Quotations from "./pages/Quotations";
 import Analytics from "./pages/Analytics";
 import UserManagement from "./pages/UserManagement";
 import UserDetails from "./pages/UserDetails";
+import ServicesManagement from "./pages/ServicesManagement";
 import AgentProfile from "./pages/AgentProfile";
 import AgentLeads from "./pages/AgentLeads";
 import SalesProfile from "./pages/SalesProfile";
@@ -60,6 +61,7 @@ function AppContent() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/leads" element={<Leads />} />
               <Route path="/quotations" element={<Quotations />} />
+              <Route path="/services" element={<ServicesManagement />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/users" element={<UserManagement />} />
               <Route path="/users/:userId" element={<UserDetails />} />
