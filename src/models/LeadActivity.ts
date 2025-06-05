@@ -2,7 +2,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { ILeadActivity, ActivityType } from '../types/database';
 
-interface ILeadActivityDocument extends ILeadActivity, Document {}
+interface ILeadActivityDocument extends Omit<ILeadActivity, '_id'>, Document {}
 
 const leadActivitySchema = new Schema<ILeadActivityDocument>({
   leadId: {

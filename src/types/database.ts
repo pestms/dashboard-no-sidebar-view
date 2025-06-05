@@ -3,9 +3,9 @@ import { Types } from 'mongoose';
 
 // Base interface for all database documents
 export interface BaseDocument {
-  _id: Types.ObjectId | string;
-  createdAt: Date;
-  updatedAt: Date;
+  _id?: Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // User related types
@@ -40,10 +40,10 @@ export interface ILead extends BaseDocument {
   priority: LeadPriority;
   status: LeadStatus;
   estimatedValue: number;
-  salesPersonId?: Types.ObjectId | string;
+  salesPersonId?: Types.ObjectId;
   leadSource: LeadSource;
   lastContact?: Date;
-  services: (Types.ObjectId | string)[]; // Array of service IDs
+  services: Types.ObjectId[]; // Array of service IDs
   notes?: string;
 }
 
@@ -60,7 +60,7 @@ export interface IService extends BaseDocument {
 export type QuotationStatus = 'pending' | 'approved' | 'rejected' | 'revised';
 
 export interface IQuotationService {
-  serviceId: Types.ObjectId | string;
+  serviceId: Types.ObjectId;
   name: string;
   description?: string;
   quantity: number;
@@ -71,14 +71,14 @@ export interface IQuotationService {
 
 export interface IQuotation extends BaseDocument {
   quotationNumber: string;
-  leadId: Types.ObjectId | string;
+  leadId: Types.ObjectId;
   customerName: string;
   customerType: CustomerType;
   email: string;
   phone?: string;
   address: string;
   problemDescription: string;
-  salesPersonId: Types.ObjectId | string;
+  salesPersonId: Types.ObjectId;
   estimatedValue: number;
   status: QuotationStatus;
   validUntil: Date;
@@ -86,7 +86,7 @@ export interface IQuotation extends BaseDocument {
   notes?: string;
   
   // Version control
-  parentQuotationId?: Types.ObjectId | string;
+  parentQuotationId?: Types.ObjectId;
   version: number;
   isLatestVersion: boolean;
   revisionReason?: string;
@@ -104,14 +104,14 @@ export type ContractStatus = 'active' | 'completed' | 'cancelled' | 'paused';
 
 export interface IContract extends BaseDocument {
   contractNumber: string;
-  quotationId: Types.ObjectId | string;
-  leadId: Types.ObjectId | string;
+  quotationId: Types.ObjectId;
+  leadId: Types.ObjectId;
   customerName: string;
   customerType: CustomerType;
   email: string;
   phone?: string;
   address: string;
-  salesPersonId: Types.ObjectId | string;
+  salesPersonId: Types.ObjectId;
   status: ContractStatus;
   startDate: Date;
   endDate?: Date;
@@ -125,8 +125,8 @@ export interface IContract extends BaseDocument {
 export type ActivityType = 'call' | 'email' | 'meeting' | 'quote_sent' | 'follow_up' | 'note';
 
 export interface ILeadActivity extends BaseDocument {
-  leadId: Types.ObjectId | string;
-  userId: Types.ObjectId | string;
+  leadId: Types.ObjectId;
+  userId: Types.ObjectId;
   activityType: ActivityType;
   description: string;
   scheduledDate?: Date;

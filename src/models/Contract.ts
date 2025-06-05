@@ -39,7 +39,7 @@ const contractServiceSchema = new Schema<IQuotationService>({
   }
 }, { _id: false });
 
-interface IContractDocument extends IContract, Document {}
+interface IContractDocument extends Omit<IContract, '_id'>, Document {}
 
 const contractSchema = new Schema<IContractDocument>({
   contractNumber: {

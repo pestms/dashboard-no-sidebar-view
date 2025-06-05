@@ -40,7 +40,7 @@ const quotationServiceSchema = new Schema<IQuotationService>({
   }
 }, { _id: false });
 
-interface IQuotationDocument extends IQuotation, Document {}
+interface IQuotationDocument extends Omit<IQuotation, '_id'>, Document {}
 
 const quotationSchema = new Schema<IQuotationDocument>({
   quotationNumber: {

@@ -2,7 +2,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { ILead, CustomerType, LeadPriority, LeadStatus, LeadSource } from '../types/database';
 
-interface ILeadDocument extends ILead, Document {}
+interface ILeadDocument extends Omit<ILead, '_id'>, Document {}
 
 const leadSchema = new Schema<ILeadDocument>({
   customerName: {
