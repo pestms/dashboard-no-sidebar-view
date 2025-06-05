@@ -1,8 +1,10 @@
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { ILeadActivity, ActivityType } from '../types/database';
 
-const leadActivitySchema = new Schema<ILeadActivity>({
+interface ILeadActivityDocument extends ILeadActivity, Document {}
+
+const leadActivitySchema = new Schema<ILeadActivityDocument>({
   leadId: {
     type: Schema.Types.ObjectId,
     ref: 'Lead',
@@ -49,4 +51,4 @@ leadActivitySchema.index({ scheduledDate: 1 });
 leadActivitySchema.index({ isCompleted: 1 });
 leadActivitySchema.index({ createdAt: -1 });
 
-export const LeadActivity = mongoose.model<ILeadActivity>('LeadActivity', leadActivitySchema);
+export const LeadActivity = mongoose.model<ILeadActivityDocument>('LeadActivity', leadActivitySchema);

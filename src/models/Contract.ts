@@ -1,5 +1,5 @@
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { IContract, CustomerType, IQuotationService } from '../types/database';
 
 const contractServiceSchema = new Schema<IQuotationService>({
@@ -39,7 +39,9 @@ const contractServiceSchema = new Schema<IQuotationService>({
   }
 }, { _id: false });
 
-const contractSchema = new Schema<IContract>({
+interface IContractDocument extends IContract, Document {}
+
+const contractSchema = new Schema<IContractDocument>({
   contractNumber: {
     type: String,
     required: true,
@@ -122,7 +124,7 @@ const contractSchema = new Schema<IContract>({
 });
 
 // Pre-save middleware to generate contract number
-contractSchema.pre('save', async function(next) {
+contractSchema.pre('save', async function(this: IContractDocument, next) {
   if (this.isNew && !this.contractNumber) {
     const count = await mongoose.model('Contract').countDocuments();
     this.contractNumber = `C-${new Date().getFullYear()}-${String(count + 1).padStart(4, '0')}`;
@@ -138,4 +140,4 @@ contractSchema.index({ salesPersonId: 1 });
 contractSchema.index({ status: 1 });
 contractSchema.index({ startDate: -1 });
 
-export const Contract = mongoose.model<IContract>('Contract', contractSchema);
+export const Contract = mongoose.model<IContractDocument>('Contract', contractSchema);

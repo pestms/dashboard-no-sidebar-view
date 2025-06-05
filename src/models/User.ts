@@ -2,7 +2,9 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { IUser, UserRole } from '../types/database';
 
-const userSchema = new Schema<IUser>({
+interface IUserDocument extends IUser, Document {}
+
+const userSchema = new Schema<IUserDocument>({
   email: {
     type: String,
     required: true,
@@ -56,7 +58,7 @@ const userSchema = new Schema<IUser>({
 });
 
 // Virtual for full name
-userSchema.virtual('fullName').get(function() {
+userSchema.virtual('fullName').get(function(this: IUserDocument) {
   return `${this.firstName} ${this.lastName}`;
 });
 
@@ -65,4 +67,4 @@ userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ isActive: 1 });
 
-export const User = mongoose.model<IUser>('User', userSchema);
+export const User = mongoose.model<IUserDocument>('User', userSchema);

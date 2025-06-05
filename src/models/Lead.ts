@@ -1,8 +1,10 @@
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { ILead, CustomerType, LeadPriority, LeadStatus, LeadSource } from '../types/database';
 
-const leadSchema = new Schema<ILead>({
+interface ILeadDocument extends ILead, Document {}
+
+const leadSchema = new Schema<ILeadDocument>({
   customerName: {
     type: String,
     required: true,
@@ -103,4 +105,4 @@ leadSchema.index({
   problemDescription: 'text'
 });
 
-export const Lead = mongoose.model<ILead>('Lead', leadSchema);
+export const Lead = mongoose.model<ILeadDocument>('Lead', leadSchema);

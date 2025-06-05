@@ -1,5 +1,5 @@
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { IQuotation, IQuotationService, CustomerType, QuotationStatus } from '../types/database';
 
 const quotationServiceSchema = new Schema<IQuotationService>({
@@ -40,7 +40,9 @@ const quotationServiceSchema = new Schema<IQuotationService>({
   }
 }, { _id: false });
 
-const quotationSchema = new Schema<IQuotation>({
+interface IQuotationDocument extends IQuotation, Document {}
+
+const quotationSchema = new Schema<IQuotationDocument>({
   quotationNumber: {
     type: String,
     required: true,
@@ -162,7 +164,7 @@ const quotationSchema = new Schema<IQuotation>({
 });
 
 // Pre-save middleware to generate quotation number
-quotationSchema.pre('save', async function(next) {
+quotationSchema.pre('save', async function(this: IQuotationDocument, next) {
   if (this.isNew && !this.quotationNumber) {
     const count = await mongoose.model('Quotation').countDocuments();
     this.quotationNumber = `Q-${new Date().getFullYear()}-${String(count + 1).padStart(4, '0')}`;
@@ -171,7 +173,7 @@ quotationSchema.pre('save', async function(next) {
 });
 
 // Pre-save middleware to calculate totals
-quotationSchema.pre('save', function(next) {
+quotationSchema.pre('save', function(this: IQuotationDocument, next) {
   const includedServices = this.services.filter(service => service.included);
   this.subtotal = includedServices.reduce((sum, service) => sum + service.totalPrice, 0);
   this.taxAmount = this.subtotal * this.taxRate;
@@ -190,4 +192,4 @@ quotationSchema.index({ parentQuotationId: 1 });
 quotationSchema.index({ createdAt: -1 });
 quotationSchema.index({ validUntil: 1 });
 
-export const Quotation = mongoose.model<IQuotation>('Quotation', quotationSchema);
+export const Quotation = mongoose.model<IQuotationDocument>('Quotation', quotationSchema);
