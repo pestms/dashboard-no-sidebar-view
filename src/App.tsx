@@ -1,3 +1,4 @@
+
 import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import { Toaster } from "@/components/ui/toaster";
@@ -22,6 +23,7 @@ import SalesLeads from "./pages/SalesLeads";
 import SalesQuotations from "./pages/SalesQuotations";
 import Schedule from "./pages/Schedule";
 import Login from "./pages/Login";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import { useState, useEffect } from 'react';
 
