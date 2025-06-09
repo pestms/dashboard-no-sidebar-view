@@ -38,6 +38,7 @@ export function LeadActivityModal({
   const [activityType, setActivityType] = useState<string>('');
   const [description, setDescription] = useState('');
   const [scheduledDate, setScheduledDate] = useState<Date | undefined>();
+  const [agenda, setAgenda] = useState<string>('');
   const [isCompleted, setIsCompleted] = useState(false);
 
   const activityTypes = [
@@ -47,6 +48,15 @@ export function LeadActivityModal({
     { value: 'quote_sent', label: 'Quote Sent' },
     { value: 'follow_up', label: 'Follow Up' },
     { value: 'note', label: 'Note' }
+  ];
+
+  const agendaOptions = [
+    { value: 'call', label: 'Phone Call' },
+    { value: 'email', label: 'Email' },
+    { value: 'meeting', label: 'Meeting' },
+    { value: 'site_visit', label: 'Site Visit' },
+    { value: 'quote_review', label: 'Quote Review' },
+    { value: 'contract_signing', label: 'Contract Signing' }
   ];
 
   const handleSubmit = () => {
@@ -59,17 +69,27 @@ export function LeadActivityModal({
       return;
     }
 
+    if (scheduledDate && !agenda) {
+      toast({
+        title: "Missing Agenda",
+        description: "Please select an agenda for the scheduled activity.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const newActivity = {
       id: Date.now().toString(),
       leadId,
       activityType,
       description,
       scheduledDate: scheduledDate?.toISOString(),
+      agenda: scheduledDate ? agenda : undefined,
       completedDate: isCompleted ? new Date().toISOString() : undefined,
       isCompleted,
       createdAt: new Date().toISOString(),
-      userId: 'current-user', // In real app, get from auth context
-      userName: 'Alex Thompson' // In real app, get from auth context
+      userId: 'current-user',
+      userName: 'Alex Thompson'
     };
 
     onActivityAdded(newActivity);
@@ -78,6 +98,7 @@ export function LeadActivityModal({
     setActivityType('');
     setDescription('');
     setScheduledDate(undefined);
+    setAgenda('');
     setIsCompleted(false);
     onClose();
 
@@ -89,7 +110,7 @@ export function LeadActivityModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-card border border-border">
+      <DialogContent className="max-w-md bg-card border border-border mx-4">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
@@ -127,7 +148,7 @@ export function LeadActivityModal({
           </div>
 
           <div className="space-y-2">
-            <Label>Scheduled/Completed Date (Optional)</Label>
+            <Label>Scheduled Date (Optional)</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -148,6 +169,24 @@ export function LeadActivityModal({
               </PopoverContent>
             </Popover>
           </div>
+
+          {scheduledDate && (
+            <div className="space-y-2">
+              <Label htmlFor="agenda">Agenda *</Label>
+              <Select value={agenda} onValueChange={setAgenda}>
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue placeholder="Select agenda" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border border-border">
+                  {agendaOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="flex items-center space-x-2">
             <input

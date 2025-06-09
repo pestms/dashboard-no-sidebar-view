@@ -14,7 +14,8 @@ import {
   ChevronDown,
   ChevronRight,
   Calendar,
-  User
+  User,
+  Target
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -23,6 +24,7 @@ interface Activity {
   activityType: string;
   description: string;
   scheduledDate?: string;
+  agenda?: string;
   completedDate?: string;
   isCompleted: boolean;
   createdAt: string;
@@ -72,6 +74,18 @@ export function LeadActivities({ activities, isOpen, onToggle }: LeadActivitiesP
     }
   };
 
+  const getAgendaLabel = (agenda: string) => {
+    switch (agenda) {
+      case 'call': return 'Phone Call';
+      case 'email': return 'Email';
+      case 'meeting': return 'Meeting';
+      case 'site_visit': return 'Site Visit';
+      case 'quote_review': return 'Quote Review';
+      case 'contract_signing': return 'Contract Signing';
+      default: return agenda;
+    }
+  };
+
   if (activities.length === 0) {
     return null;
   }
@@ -100,7 +114,7 @@ export function LeadActivities({ activities, isOpen, onToggle }: LeadActivitiesP
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
                       <Badge 
                         variant="outline" 
                         className={`text-xs ${getActivityColor(activity.activityType)}`}
@@ -112,12 +126,18 @@ export function LeadActivities({ activities, isOpen, onToggle }: LeadActivitiesP
                           Completed
                         </Badge>
                       )}
+                      {activity.agenda && (
+                        <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 flex items-center gap-1">
+                          <Target className="w-2 h-2" />
+                          {getAgendaLabel(activity.agenda)}
+                        </Badge>
+                      )}
                     </div>
-                    <p className="text-muted-foreground mb-1 line-clamp-2">{activity.description}</p>
-                    <div className="flex items-center gap-3 text-muted-foreground">
+                    <p className="text-muted-foreground mb-1 line-clamp-2 break-words">{activity.description}</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <User className="w-3 h-3" />
-                        <span>{activity.userName}</span>
+                        <span className="truncate">{activity.userName}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />

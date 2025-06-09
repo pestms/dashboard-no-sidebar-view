@@ -7,6 +7,7 @@ interface Activity {
   activityType: string;
   description: string;
   scheduledDate?: string;
+  agenda?: string;
   completedDate?: string;
   isCompleted: boolean;
   createdAt: string;
@@ -26,6 +27,7 @@ const initialState: LeadActivitiesState = {
       activityType: 'call',
       description: 'Initial contact call. Customer described ant infestation in kitchen area. Scheduled inspection for next Tuesday.',
       scheduledDate: '2024-01-16T10:00:00.000Z',
+      agenda: 'site_visit',
       isCompleted: true,
       completedDate: '2024-01-15T14:30:00.000Z',
       createdAt: '2024-01-15T14:30:00.000Z',
@@ -71,6 +73,7 @@ const initialState: LeadActivitiesState = {
       activityType: 'follow_up',
       description: 'Customer requested to call back next week as they are traveling.',
       scheduledDate: '2024-01-22T14:00:00.000Z',
+      agenda: 'call',
       isCompleted: false,
       createdAt: '2024-01-17T11:00:00.000Z',
       userId: 'user1',
