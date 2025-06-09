@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -9,8 +8,11 @@ import {
   addLead,
   Lead 
 } from '@/store/slices/leadsSlice';
+import { addActivity } from '@/store/slices/leadActivitiesSlice';
 import { LeadDetailsModal } from '@/components/LeadDetailsModal';
 import { QuotationModal } from '@/components/QuotationModal';
+import { LeadActivityModal } from '@/components/LeadActivityModal';
+import { LeadActivities } from '@/components/LeadActivities';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -37,18 +39,25 @@ import {
   Building, 
   Home, 
   DollarSign,
-  Calendar
+  Calendar,
+  MessageSquare
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 export default function SalesLeads() {
   const dispatch = useDispatch();
   const { filteredLeads, searchTerm, statusFilter, priorityFilter } = useSelector((state: RootState) => state.leads);
+  const { activities } = useSelector((state: RootState) => state.leadActivities);
   
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isQuotationModalOpen, setIsQuotationModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [activityLeadId, setActivityLeadId] = useState<string>('');
+  const [activityLeadName, setActivityLeadName] = useState<string>('');
+  const [expandedActivities, setExpandedActivities] = useState<Set<string>>(new Set());
+  
   const [newLead, setNewLead] = useState({
     customerName: '',
     customerType: 'Residential' as 'Residential' | 'Commercial',
@@ -123,6 +132,30 @@ export default function SalesLeads() {
       case 'contract': return 'bg-green-100 text-green-800 border-green-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
+  };
+
+  const handleAddActivity = (leadId: string, leadName: string) => {
+    setActivityLeadId(leadId);
+    setActivityLeadName(leadName);
+    setIsActivityModalOpen(true);
+  };
+
+  const handleActivityAdded = (activity: any) => {
+    dispatch(addActivity(activity));
+  };
+
+  const toggleActivityExpansion = (leadId: string) => {
+    const newExpanded = new Set(expandedActivities);
+    if (newExpanded.has(leadId)) {
+      newExpanded.delete(leadId);
+    } else {
+      newExpanded.add(leadId);
+    }
+    setExpandedActivities(newExpanded);
+  };
+
+  const getLeadActivities = (leadId: string) => {
+    return activities.filter(activity => activity.leadId === leadId);
   };
 
   return (
@@ -302,92 +335,116 @@ export default function SalesLeads() {
 
       {/* Leads Cards */}
       <div className="space-y-4">
-        {filteredLeads.map((lead) => (
-          <Card key={lead.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-3 sm:p-4">
-              <div className="space-y-3">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    {lead.customerType === 'Commercial' ? 
-                      <Building className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : 
-                      <Home className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                    }
-                    <h3 className="font-semibold text-sm sm:text-base truncate">{lead.customerName}</h3>
-                  </div>
-                  <div className="flex flex-col gap-1 sm:flex-row sm:gap-2 flex-shrink-0">
-                    <Badge 
-                      variant="outline" 
-                      className={`text-xs ${getPriorityColor(lead.priority)}`}
-                    >
-                      {lead.priority}
-                    </Badge>
-                    <Badge 
-                      variant="outline" 
-                      className={`text-xs ${getStatusColor(lead.status)}`}
-                    >
-                      {lead.status}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Service Details */}
-                <p className="text-sm text-muted-foreground line-clamp-2">{lead.serviceDetails || lead.problemDescription}</p>
-
-                {/* Contact Info */}
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <Phone className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                    <span className="truncate">{lead.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <Mail className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                    <span className="truncate">{lead.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                    <span className="truncate">{lead.address}</span>
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="flex flex-col gap-3 pt-2 border-t sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-4 text-xs sm:text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="w-3 h-3" />
-                      <span>${lead.estimatedValue}</span>
+        {filteredLeads.map((lead) => {
+          const leadActivities = getLeadActivities(lead.id);
+          const isExpanded = expandedActivities.has(lead.id);
+          
+          return (
+            <Card key={lead.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-3 sm:p-4">
+                <div className="space-y-3">
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {lead.customerType === 'Commercial' ? 
+                        <Building className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : 
+                        <Home className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      }
+                      <h3 className="font-semibold text-sm sm:text-base truncate">{lead.customerName}</h3>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span className="truncate">{lead.lastContact}</span>
+                    <div className="flex flex-col gap-1 sm:flex-row sm:gap-2 flex-shrink-0">
+                      <Badge 
+                        variant="outline" 
+                        className={`text-xs ${getPriorityColor(lead.priority)}`}
+                      >
+                        {lead.priority}
+                      </Badge>
+                      <Badge 
+                        variant="outline" 
+                        className={`text-xs ${getStatusColor(lead.status)}`}
+                      >
+                        {lead.status}
+                      </Badge>
                     </div>
                   </div>
-                  <div className="flex gap-2 w-full sm:w-auto">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleViewDetails(lead)}
-                      className="flex-1 sm:flex-initial"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      <span className="hidden sm:inline">View Details</span>
-                      <span className="sm:hidden">Details</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => handleCreateQuotation(lead)}
-                      className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-initial"
-                    >
-                      <FileText className="w-4 h-4 mr-2" />
-                      <span className="hidden sm:inline">Create Quote</span>
-                      <span className="sm:hidden">Quote</span>
-                    </Button>
+
+                  {/* Service Details */}
+                  <p className="text-sm text-muted-foreground line-clamp-2">{lead.serviceDetails || lead.problemDescription}</p>
+
+                  {/* Contact Info */}
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                      <Phone className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                      <span className="truncate">{lead.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                      <Mail className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                      <span className="truncate">{lead.email}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                      <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                      <span className="truncate">{lead.address}</span>
+                    </div>
+                  </div>
+
+                  {/* Activity History */}
+                  {leadActivities.length > 0 && (
+                    <LeadActivities
+                      activities={leadActivities}
+                      isOpen={isExpanded}
+                      onToggle={() => toggleActivityExpansion(lead.id)}
+                    />
+                  )}
+
+                  {/* Footer */}
+                  <div className="flex flex-col gap-3 pt-2 border-t sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-4 text-xs sm:text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="w-3 h-3" />
+                        <span>${lead.estimatedValue}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        <span className="truncate">{lead.lastContact}</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAddActivity(lead.id, lead.customerName)}
+                        className="flex-1 sm:flex-initial"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        <span className="hidden sm:inline">Add Activity</span>
+                        <span className="sm:hidden">Activity</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewDetails(lead)}
+                        className="flex-1 sm:flex-initial"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        <span className="hidden sm:inline">View Details</span>
+                        <span className="sm:hidden">Details</span>
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleCreateQuotation(lead)}
+                        className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-initial"
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        <span className="hidden sm:inline">Create Quote</span>
+                        <span className="sm:hidden">Quote</span>
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {filteredLeads.length === 0 && (
@@ -406,6 +463,15 @@ export default function SalesLeads() {
         lead={selectedLead}
         isOpen={isQuotationModalOpen}
         onClose={() => setIsQuotationModalOpen(false)}
+      />
+
+      <LeadActivityModal
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+        leadId={activityLeadId}
+        leadName={activityLeadName}
+        type="lead"
+        onActivityAdded={handleActivityAdded}
       />
     </div>
   );

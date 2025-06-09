@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/store';
@@ -11,6 +10,9 @@ import {
   createRevision,
   toggleShowAllVersions
 } from '@/store/slices/quotationsSlice';
+import { addActivity } from '@/store/slices/leadActivitiesSlice';
+import { LeadActivityModal } from '@/components/LeadActivityModal';
+import { LeadActivities } from '@/components/LeadActivities';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,7 +42,8 @@ import {
   Calendar,
   GitBranch,
   Eye,
-  EyeOff
+  EyeOff,
+  MessageSquare
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { CreateRevisionModal } from '@/components/CreateRevisionModal';
@@ -49,9 +52,15 @@ import { QuotationVersions } from '@/components/QuotationVersions';
 export default function SalesQuotations() {
   const dispatch = useDispatch();
   const { filteredQuotations, searchTerm, statusFilter, showAllVersions, quotations } = useSelector((state: RootState) => state.quotations);
+  const { activities } = useSelector((state: RootState) => state.leadActivities);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedQuotationForRevision, setSelectedQuotationForRevision] = useState<string | null>(null);
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [activityLeadId, setActivityLeadId] = useState<string>('');
+  const [activityLeadName, setActivityLeadName] = useState<string>('');
+  const [expandedActivities, setExpandedActivities] = useState<Set<string>>(new Set());
+  
   const [newQuotation, setNewQuotation] = useState({
     customerName: '',
     customerType: 'Residential' as 'Residential' | 'Commercial',
@@ -163,6 +172,30 @@ export default function SalesQuotations() {
     const updatedServices = [...newQuotation.services];
     updatedServices[index].included = !updatedServices[index].included;
     setNewQuotation({ ...newQuotation, services: updatedServices });
+  };
+
+  const handleAddActivity = (leadId: string, leadName: string) => {
+    setActivityLeadId(leadId);
+    setActivityLeadName(leadName);
+    setIsActivityModalOpen(true);
+  };
+
+  const handleActivityAdded = (activity: any) => {
+    dispatch(addActivity(activity));
+  };
+
+  const toggleActivityExpansion = (leadId: string) => {
+    const newExpanded = new Set(expandedActivities);
+    if (newExpanded.has(leadId)) {
+      newExpanded.delete(leadId);
+    } else {
+      newExpanded.add(leadId);
+    }
+    setExpandedActivities(newExpanded);
+  };
+
+  const getQuotationActivities = (leadId: string) => {
+    return activities.filter(activity => activity.leadId === leadId);
   };
 
   // Get the selected quotation for revision
@@ -310,132 +343,156 @@ export default function SalesQuotations() {
 
       {/* Mobile-friendly Quotations List */}
       <div className="space-y-4">
-        {filteredQuotations.map((quotation) => (
-          <Card key={quotation.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-4">
-              <div className="space-y-3">
-                {/* Header with customer info and value */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      {quotation.customerType === 'Commercial' ? 
-                        <Building className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : 
-                        <Home className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                      }
-                      <div className="min-w-0">
-                        <h3 className="font-medium truncate">{quotation.customerName}</h3>
-                        <p className="text-sm text-muted-foreground">{quotation.customerType}</p>
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs text-muted-foreground">ID: {quotation.id}</p>
-                          {quotation.version > 1 && (
-                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
-                              <GitBranch className="w-3 h-3 mr-1" />
-                              v{quotation.version}
-                            </Badge>
-                          )}
+        {filteredQuotations.map((quotation) => {
+          const quotationActivities = getQuotationActivities(quotation.leadId);
+          const isExpanded = expandedActivities.has(quotation.leadId);
+          
+          return (
+            <Card key={quotation.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  {/* Header with customer info and value */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        {quotation.customerType === 'Commercial' ? 
+                          <Building className="w-4 h-4 text-muted-foreground flex-shrink-0" /> : 
+                          <Home className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        }
+                        <div className="min-w-0">
+                          <h3 className="font-medium truncate">{quotation.customerName}</h3>
+                          <p className="text-sm text-muted-foreground">{quotation.customerType}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs text-muted-foreground">ID: {quotation.id}</p>
+                            {quotation.version > 1 && (
+                              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
+                                <GitBranch className="w-3 h-3 mr-1" />
+                                v{quotation.version}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="font-semibold text-green-600 text-lg">
-                      ${quotation.estimatedValue.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Valid: {quotation.validUntil}
-                    </p>
-                    <Badge 
-                      variant="outline" 
-                      className={`text-xs ${getStatusColor(quotation.status)} flex items-center gap-1 mt-1`}
-                    >
-                      {getStatusIcon(quotation.status)}
-                      {quotation.status}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Contact info */}
-                <div className="space-y-1 text-sm text-muted-foreground">
-                  <p className="truncate"><span className="font-medium">Email:</span> {quotation.email}</p>
-                  <p><span className="font-medium">Phone:</span> {quotation.phone}</p>
-                  <p><span className="font-medium">Sales Person:</span> {quotation.salesPerson}</p>
-                  {quotation.revisionReason && (
-                    <p className="text-blue-600"><span className="font-medium">Revision Reason:</span> {quotation.revisionReason}</p>
-                  )}
-                </div>
-
-                {/* Services */}
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Included Services:</p>
-                  <div className="flex flex-wrap gap-1">
-                    {quotation.services
-                      .filter(service => service.included)
-                      .map((service) => (
-                        <Badge key={service.name} variant="secondary" className="text-xs">
-                          {service.name} - ${service.price}
-                        </Badge>
-                      ))}
-                  </div>
-                </div>
-
-                {/* Version History */}
-                <QuotationVersions quotation={quotation} />
-
-                {/* Actions */}
-                <div className="flex flex-col gap-2 pt-2 border-t md:flex-row md:flex-wrap">
-                  <div className="flex flex-col gap-2 md:flex-row md:flex-1">
-                    <Select
-                      value={quotation.status}
-                      onValueChange={(value) => handleUpdateStatus(quotation.id, value as any)}
-                    >
-                      <SelectTrigger className="bg-background border-border">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border">
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="approved">Approved</SelectItem>
-                        <SelectItem value="rejected">Rejected</SelectItem>
-                        <SelectItem value="revised">Revised</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full md:w-auto"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </div>
-
-                  <div className="flex flex-col gap-2 md:flex-row">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedQuotationForRevision(quotation.id)}
-                      className="w-full md:w-auto"
-                    >
-                      <GitBranch className="w-4 h-4 mr-2" />
-                      Create Revision
-                    </Button>
-
-                    {quotation.status === 'approved' && (
-                      <Button
-                        size="sm"
-                        onClick={() => handleConvertToContract(quotation.id)}
-                        className="bg-green-600 hover:bg-green-700 w-full md:w-auto"
+                    <div className="text-right flex-shrink-0">
+                      <p className="font-semibold text-green-600 text-lg">
+                        ${quotation.estimatedValue.toLocaleString()}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Valid: {quotation.validUntil}
+                      </p>
+                      <Badge 
+                        variant="outline" 
+                        className={`text-xs ${getStatusColor(quotation.status)} flex items-center gap-1 mt-1`}
                       >
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        Convert to Contract
-                      </Button>
+                        {getStatusIcon(quotation.status)}
+                        {quotation.status}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Contact info */}
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <p className="truncate"><span className="font-medium">Email:</span> {quotation.email}</p>
+                    <p><span className="font-medium">Phone:</span> {quotation.phone}</p>
+                    <p><span className="font-medium">Sales Person:</span> {quotation.salesPerson}</p>
+                    {quotation.revisionReason && (
+                      <p className="text-blue-600"><span className="font-medium">Revision Reason:</span> {quotation.revisionReason}</p>
                     )}
                   </div>
+
+                  {/* Services */}
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Included Services:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {quotation.services
+                        .filter(service => service.included)
+                        .map((service) => (
+                          <Badge key={service.name} variant="secondary" className="text-xs">
+                            {service.name} - ${service.price}
+                          </Badge>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Activity History */}
+                  {quotationActivities.length > 0 && (
+                    <LeadActivities
+                      activities={quotationActivities}
+                      isOpen={isExpanded}
+                      onToggle={() => toggleActivityExpansion(quotation.leadId)}
+                    />
+                  )}
+
+                  {/* Version History */}
+                  <QuotationVersions quotation={quotation} />
+
+                  {/* Actions */}
+                  <div className="flex flex-col gap-2 pt-2 border-t md:flex-row md:flex-wrap">
+                    <div className="flex flex-col gap-2 md:flex-row md:flex-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAddActivity(quotation.leadId, quotation.customerName)}
+                        className="w-full md:w-auto"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Add Activity
+                      </Button>
+                      
+                      <Select
+                        value={quotation.status}
+                        onValueChange={(value) => handleUpdateStatus(quotation.id, value as any)}
+                      >
+                        <SelectTrigger className="bg-background border-border">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover border border-border">
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="approved">Approved</SelectItem>
+                          <SelectItem value="rejected">Rejected</SelectItem>
+                          <SelectItem value="revised">Revised</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full md:w-auto"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+
+                    <div className="flex flex-col gap-2 md:flex-row">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedQuotationForRevision(quotation.id)}
+                        className="w-full md:w-auto"
+                      >
+                        <GitBranch className="w-4 h-4 mr-2" />
+                        Create Revision
+                      </Button>
+
+                      {quotation.status === 'approved' && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleConvertToContract(quotation.id)}
+                          className="bg-green-600 hover:bg-green-700 w-full md:w-auto"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Convert to Contract
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {filteredQuotations.length === 0 && (
@@ -449,6 +506,15 @@ export default function SalesQuotations() {
         quotation={selectedQuotation}
         isOpen={!!selectedQuotationForRevision}
         onClose={() => setSelectedQuotationForRevision(null)}
+      />
+
+      <LeadActivityModal
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+        leadId={activityLeadId}
+        leadName={activityLeadName}
+        type="quotation"
+        onActivityAdded={handleActivityAdded}
       />
     </div>
   );
