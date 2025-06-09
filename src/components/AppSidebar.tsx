@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const adminMenuItems = [
-  { title: 'Dashboard', url: '/', icon: Home },
+  { title: 'Dashboard', url: '/dashboard', icon: Home },
   { title: 'Leads', url: '/leads', icon: Users },
   { title: 'Quotations', url: '/quotations', icon: FileText },
   { title: 'Services Management', url: '/services', icon: Wrench },

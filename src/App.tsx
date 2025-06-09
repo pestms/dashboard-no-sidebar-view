@@ -1,6 +1,5 @@
-
-import { Provider } from 'react-redux';
-import { store } from '@/store/store';
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,7 +24,7 @@ import Schedule from "./pages/Schedule";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +35,7 @@ function AppContent() {
 
   useEffect(() => {
     // Check if user is logged in
-    const userData = localStorage.getItem('currentUser');
+    const userData = localStorage.getItem("currentUser");
     if (userData) {
       setCurrentUser(JSON.parse(userData));
       setIsAuthenticated(true);
@@ -46,21 +45,24 @@ function AppContent() {
   }, [location.pathname]);
 
   // If on login page or not authenticated, show login
-  if (location.pathname === '/login' || !isAuthenticated) {
+  if (location.pathname === "/login") {
     return <Login />;
   }
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar />
+        {isAuthenticated && <AppSidebar />}
         <main className="flex-1">
           <div className="p-6">
-            <div className="mb-4">
-              <SidebarTrigger className="mb-4" />
-            </div>
+            {isAuthenticated && (
+              <div className="mb-4">
+                <SidebarTrigger className="mb-4" />
+              </div>
+            )}
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Landing />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/leads" element={<Leads />} />
               <Route path="/quotations" element={<Quotations />} />
               <Route path="/services" element={<ServicesManagement />} />
