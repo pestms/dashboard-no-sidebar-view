@@ -1,6 +1,6 @@
 
 import mongoose, { Schema, Document } from 'mongoose';
-import { ILeadActivity, ActivityType } from '../types/database';
+import { ILeadActivity, ActivityType, AgendaType } from '../types/database';
 
 interface ILeadActivityDocument extends Omit<ILeadActivity, '_id'>, Document {}
 
@@ -29,6 +29,10 @@ const leadActivitySchema = new Schema<ILeadActivityDocument>({
   scheduledDate: {
     type: Date
   },
+  agenda: {
+    type: String,
+    enum: ['call', 'email', 'meeting', 'site_visit', 'quote_review', 'contract_signing'] as AgendaType[]
+  },
   completedDate: {
     type: Date
   },
@@ -41,6 +45,22 @@ const leadActivitySchema = new Schema<ILeadActivityDocument>({
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
+});
+
+// Add virtual for user details
+leadActivitySchema.virtual('user', {
+  ref: 'User',
+  localField: 'userId',
+  foreignField: '_id',
+  justOne: true
+});
+
+// Add virtual for lead details
+leadActivitySchema.virtual('lead', {
+  ref: 'Lead',
+  localField: 'leadId',
+  foreignField: '_id',
+  justOne: true
 });
 
 // Indexes

@@ -1,4 +1,3 @@
-
 import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import { Toaster } from "@/components/ui/toaster";
@@ -21,6 +20,7 @@ import AgentLeads from "./pages/AgentLeads";
 import SalesProfile from "./pages/SalesProfile";
 import SalesLeads from "./pages/SalesLeads";
 import SalesQuotations from "./pages/SalesQuotations";
+import Schedule from "./pages/Schedule";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import { useState, useEffect } from 'react';
@@ -70,6 +70,7 @@ function AppContent() {
               <Route path="/sales/profile" element={<SalesProfile />} />
               <Route path="/sales/leads" element={<SalesLeads />} />
               <Route path="/sales/quotations" element={<SalesQuotations />} />
+              <Route path="/sales/schedule" element={<Schedule />} />
               <Route path="/login" element={<Login />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

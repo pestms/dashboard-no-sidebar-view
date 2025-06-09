@@ -19,14 +19,14 @@ const leadSchema = new Schema<ILeadDocument>({
   email: {
     type: String,
     required: true,
-    lowercase: true,
     trim: true,
+    lowercase: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
   },
   phone: {
     type: String,
     trim: true,
-    match: [/^\+?[\d\s\-\(\)]+$/, 'Please enter a valid phone number']
+    maxlength: 20
   },
   address: {
     type: String,
@@ -61,8 +61,7 @@ const leadSchema = new Schema<ILeadDocument>({
   estimatedValue: {
     type: Number,
     required: true,
-    min: 0,
-    default: 0
+    min: 0
   },
   salesPersonId: {
     type: Schema.Types.ObjectId,
@@ -71,6 +70,7 @@ const leadSchema = new Schema<ILeadDocument>({
   leadSource: {
     type: String,
     enum: ['Website Form', 'Phone Call', 'Referral', 'Advertisement', 'Other'] as LeadSource[],
+    required: true,
     default: 'Website Form'
   },
   lastContact: {
@@ -82,6 +82,7 @@ const leadSchema = new Schema<ILeadDocument>({
   }],
   notes: {
     type: String,
+    trim: true,
     maxlength: 2000
   }
 }, {
@@ -90,19 +91,40 @@ const leadSchema = new Schema<ILeadDocument>({
   toObject: { virtuals: true }
 });
 
-// Indexes for performance
+// Virtual for activities
+leadSchema.virtual('activities', {
+  ref: 'LeadActivity',
+  localField: '_id',
+  foreignField: 'leadId'
+});
+
+// Virtual for sales person details
+leadSchema.virtual('salesPerson', {
+  ref: 'User',
+  localField: 'salesPersonId',
+  foreignField: '_id',
+  justOne: true
+});
+
+// Virtual for service details
+leadSchema.virtual('serviceDetails', {
+  ref: 'Service',
+  localField: 'services',
+  foreignField: '_id'
+});
+
+// Indexes
+leadSchema.index({ email: 1 });
+leadSchema.index({ phone: 1 });
 leadSchema.index({ status: 1 });
 leadSchema.index({ priority: 1 });
 leadSchema.index({ salesPersonId: 1 });
-leadSchema.index({ customerType: 1 });
+leadSchema.index({ leadSource: 1 });
 leadSchema.index({ createdAt: -1 });
-leadSchema.index({ estimatedValue: -1 });
+leadSchema.index({ lastContact: -1 });
 
-// Text search index
-leadSchema.index({
-  customerName: 'text',
-  serviceDetails: 'text',
-  problemDescription: 'text'
-});
+// Compound indexes
+leadSchema.index({ status: 1, priority: 1 });
+leadSchema.index({ salesPersonId: 1, status: 1 });
 
 export const Lead = mongoose.model<ILeadDocument>('Lead', leadSchema);

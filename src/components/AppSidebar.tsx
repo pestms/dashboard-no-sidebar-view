@@ -1,5 +1,4 @@
-
-import { Home, Users, FileText, Settings, BarChart3, UserCheck, LogOut, Sun, Moon, Wrench } from 'lucide-react';
+import { Home, Users, FileText, Settings, BarChart3, UserCheck, LogOut, Sun, Moon, Wrench, Calendar } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -37,6 +36,7 @@ const salesMenuItems = [
   { title: 'Profile', url: '/sales/profile', icon: UserCheck },
   { title: 'Leads', url: '/sales/leads', icon: Users },
   { title: 'Quotations', url: '/sales/quotations', icon: FileText },
+  { title: 'Schedule', url: '/sales/schedule', icon: Calendar },
 ];
 
 export function AppSidebar() {

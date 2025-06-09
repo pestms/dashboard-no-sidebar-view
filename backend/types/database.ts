@@ -1,4 +1,3 @@
-
 import { Types } from 'mongoose';
 
 // Base interface for all database documents
@@ -122,6 +121,7 @@ export interface IContract extends BaseDocument {
 
 // Activity related types
 export type ActivityType = 'call' | 'email' | 'meeting' | 'quote_sent' | 'follow_up' | 'note';
+export type AgendaType = 'call' | 'email' | 'meeting' | 'site_visit' | 'quote_review' | 'contract_signing';
 
 export interface ILeadActivity extends BaseDocument {
   leadId: Types.ObjectId;
@@ -129,6 +129,7 @@ export interface ILeadActivity extends BaseDocument {
   activityType: ActivityType;
   description: string;
   scheduledDate?: Date;
+  agenda?: AgendaType;
   completedDate?: Date;
   isCompleted: boolean;
 }
