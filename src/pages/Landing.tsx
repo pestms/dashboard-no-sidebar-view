@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -536,13 +535,33 @@ const Landing = () => {
         </Button>
       </div>
 
-      <style jsx>{`
+      {/* CSS Animations */}
+      <style>{`
         @keyframes slide {
           0% {
             transform: translateX(0);
           }
           100% {
             transform: translateX(-50%);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-out;
+        }
+        
+        .hover-scale:hover {
+          transform: scale(1.05);
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
       `}</style>
