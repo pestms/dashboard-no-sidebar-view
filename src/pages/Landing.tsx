@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -164,102 +165,127 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <div className="bg-gradient-to-r from-green-600 to-teal-600 p-2 rounded-lg">
+              <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-lg">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">PestGuard CRM</span>
+              <span className="text-xl font-bold text-white">PestGuard CRM</span>
+            </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#" className="text-gray-300 hover:text-white transition-colors">Features</a>
+              <a href="#" className="text-gray-300 hover:text-white transition-colors">Pricing</a>
+              <a href="#" className="text-gray-300 hover:text-white transition-colors">How it Works</a>
+              <a href="#" className="text-gray-300 hover:text-white transition-colors">FAQs</a>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => navigate('/login')} className="text-gray-700 hover:text-gray-900">
+              <Button variant="ghost" onClick={() => navigate('/login')} className="text-gray-300 hover:text-white hover:bg-gray-800">
                 Log In
               </Button>
-              <Button className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white">
-                Sign Up Free
+              <Button className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white">
+                Sign Up
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section with Pest Background */}
-      <section className="relative overflow-hidden py-20 lg:py-32 bg-gradient-to-br from-green-50 via-white to-blue-50">
+      {/* Hero Section with Dark Background */}
+      <section className="relative overflow-hidden py-20 lg:py-32 bg-gray-900">
+        {/* Background gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
+        
         {/* Pest-themed background pattern */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-10 w-8 h-8 text-green-600">🐜</div>
-          <div className="absolute top-32 right-20 w-6 h-6 text-orange-500">🦗</div>
-          <div className="absolute bottom-20 left-1/4 w-7 h-7 text-green-500">🕷️</div>
-          <div className="absolute top-48 left-1/3 w-5 h-5 text-yellow-600">🐛</div>
-          <div className="absolute bottom-32 right-1/3 w-6 h-6 text-red-500">🦟</div>
-          <div className="absolute top-20 right-1/4 w-8 h-8 text-green-700">🪲</div>
+          <div className="absolute top-10 left-10 w-8 h-8 text-green-500">🐜</div>
+          <div className="absolute top-32 right-20 w-6 h-6 text-blue-400">🦗</div>
+          <div className="absolute bottom-20 left-1/4 w-7 h-7 text-green-400">🕷️</div>
+          <div className="absolute top-48 left-1/3 w-5 h-5 text-yellow-400">🐛</div>
+          <div className="absolute bottom-32 right-1/3 w-6 h-6 text-red-400">🦟</div>
+          <div className="absolute top-20 right-1/4 w-8 h-8 text-green-500">🪲</div>
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8 animate-fade-in">
-              <div className="space-y-4">
-                <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-100 to-teal-100 text-green-800 rounded-full text-sm font-medium mb-4">
-                  <Award className="w-4 h-4 mr-2" />
-                  #1 CRM for Pest Control Businesses
-                </div>
-                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                  Grow Your Pest Control Business with 
-                  <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent"> Smarter Lead Management</span>
-                </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
-                  Capture leads, send quotes, convert more clients — all in one dashboard. 
-                  Built specifically for pest control businesses.
-                </p>
+          <div className="text-center space-y-8 animate-fade-in">
+            <div className="space-y-6">
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-500/30 text-green-400 rounded-full text-sm font-medium mb-4">
+                <Award className="w-4 h-4 mr-2" />
+                #1 CRM for Pest Control Businesses
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-lg px-8 py-4 hover-scale">
-                  Book a Demo
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8 py-4 border-green-600 text-green-600 hover:bg-green-50">
-                  Start Free Trial
-                </Button>
+              <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight max-w-4xl mx-auto">
+                Manage Pest Control Leads 
+                <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent"> 5x Faster</span>
+                <br />
+                <span className="text-3xl lg:text-5xl">With PestGuard CRM</span>
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
+                Automate tracking, speed up reviews, remove bottlenecks, and stay fully aligned in one streamlined workspace.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white text-lg px-8 py-4">
+                Start Free Trial
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg px-8 py-4 border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
+                Watch Demo →
+              </Button>
+            </div>
+            <div className="flex items-center justify-center space-x-6 text-sm text-gray-400">
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>No credit card required</span>
               </div>
-              <div className="flex items-center space-x-6 text-sm text-gray-500">
-                <div className="flex items-center space-x-1">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span>No credit card required</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span>14-day free trial</span>
-                </div>
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>14-day free trial</span>
               </div>
             </div>
-            <div className="relative animate-fade-in">
-              <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-3xl p-8 transform rotate-3 shadow-2xl">
-                <div className="bg-white rounded-2xl p-6 transform -rotate-3 shadow-lg">
+
+            {/* Dashboard Preview with fade effect */}
+            <div className="relative mt-16 max-w-5xl mx-auto">
+              <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-700">
+                <div className="bg-gray-900 rounded-xl p-6 shadow-lg">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-900">Lead Dashboard</h3>
-                      <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium animate-pulse">
-                        Live
+                      <h3 className="font-semibold text-white">Welcome Back, John Connor! 👋</h3>
+                      <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-medium animate-pulse border border-green-500/30">
+                        Live Dashboard
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg p-4">
+                        <div className="text-2xl font-bold text-blue-400">15</div>
+                        <div className="text-xs text-blue-300">+8 new leads</div>
+                      </div>
+                      <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 rounded-lg p-4">
+                        <div className="text-2xl font-bold text-green-400">10</div>
+                        <div className="text-xs text-green-300">+2 conversions</div>
+                      </div>
+                      <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg p-4">
+                        <div className="text-2xl font-bold text-orange-400">23</div>
+                        <div className="text-xs text-orange-300">+5 quotes sent</div>
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 animate-fade-in">
-                        <div className="text-sm font-medium text-orange-800">New Lead</div>
-                        <div className="text-xs text-orange-600">Residential • Ant Problem</div>
+                      <div className="bg-gradient-to-r from-orange-500/10 to-orange-500/5 border border-orange-500/20 rounded-lg p-3">
+                        <div className="text-sm font-medium text-orange-300">New Lead</div>
+                        <div className="text-xs text-orange-200">Residential • Ant Problem</div>
                       </div>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 animate-fade-in">
-                        <div className="text-sm font-medium text-blue-800">Quote Sent</div>
-                        <div className="text-xs text-blue-600">Commercial • $2,500</div>
+                      <div className="bg-gradient-to-r from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-lg p-3">
+                        <div className="text-sm font-medium text-blue-300">Quote Sent</div>
+                        <div className="text-xs text-blue-200">Commercial • $2,500</div>
                       </div>
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 animate-fade-in">
-                        <div className="text-sm font-medium text-green-800">Converted</div>
-                        <div className="text-xs text-green-600">Contract Signed • $1,800</div>
+                      <div className="bg-gradient-to-r from-green-500/10 to-green-500/5 border border-green-500/20 rounded-lg p-3">
+                        <div className="text-sm font-medium text-green-300">Converted</div>
+                        <div className="text-xs text-green-200">Contract Signed • $1,800</div>
                       </div>
                     </div>
                   </div>
                 </div>
+                {/* Bottom fade overlay */}
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent rounded-b-2xl"></div>
               </div>
             </div>
           </div>
@@ -351,8 +377,8 @@ const Landing = () => {
           <div className="mb-12 overflow-hidden">
             <div className="flex animate-[slide_20s_linear_infinite] space-x-8">
               {[...companyLogos, ...companyLogos].map((logo, index) => (
-                <div key={index} className="flex-shrink-0 bg-white rounded-lg p-4 shadow-md border border-gray-200">
-                  <div className="text-gray-600 font-semibold text-sm whitespace-nowrap">{logo}</div>
+                <div key={index} className="flex-shrink-0 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 shadow-md">
+                  <div className="text-gray-700 font-semibold text-sm whitespace-nowrap">{logo}</div>
                 </div>
               ))}
             </div>
@@ -360,7 +386,7 @@ const Landing = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 bg-white hover-scale animate-fade-in">
+              <Card key={index} className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50 hover-scale animate-fade-in">
                 <CardContent className="p-6 space-y-4">
                   <div className="flex space-x-1">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -396,15 +422,15 @@ const Landing = () => {
           
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {pricingPlans.map((plan, index) => (
-              <Card key={index} className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale animate-fade-in relative ${plan.popular ? 'scale-105 z-10' : ''}`}>
+              <Card key={index} className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale animate-fade-in relative h-full ${plan.popular ? 'scale-105 z-10' : ''}`}>
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium">
                       Most Popular
                     </div>
                   </div>
                 )}
-                <CardContent className="p-8 space-y-6">
+                <CardContent className={`p-8 space-y-6 h-full flex flex-col bg-gradient-to-br ${plan.popular ? 'from-green-50 to-blue-50' : 'from-white to-gray-50'}`}>
                   <div className="text-center">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                     <div className="space-y-1">
@@ -420,7 +446,7 @@ const Landing = () => {
                   
                   <div className={`h-1 w-full bg-gradient-to-r ${plan.gradient} rounded-full`}></div>
                   
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 flex-grow">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center space-x-3">
                         <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
@@ -429,7 +455,7 @@ const Landing = () => {
                     ))}
                   </ul>
                   
-                  <Button className={`w-full bg-gradient-to-r ${plan.gradient} hover:opacity-90 text-white text-lg py-3`}>
+                  <Button className={`w-full bg-gradient-to-r ${plan.gradient} hover:opacity-90 text-white text-lg py-3 mt-auto`}>
                     {plan.name === "Enterprise" ? "Contact Sales" : "Get Started"}
                   </Button>
                 </CardContent>
@@ -474,7 +500,7 @@ const Landing = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <div className="bg-gradient-to-r from-green-600 to-teal-600 p-2 rounded-lg">
+                <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-lg">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-xl font-bold">PestGuard CRM</span>
@@ -530,7 +556,7 @@ const Landing = () => {
 
       {/* Mobile Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:hidden z-50">
-        <Button className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white" size="lg">
+        <Button className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white" size="lg">
           Start Free Trial
         </Button>
       </div>
