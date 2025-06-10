@@ -243,49 +243,175 @@ const Landing = () => {
               </div>
             </div>
 
-            {/* Dashboard Preview with fade effect */}
-            <div className="relative mt-16 max-w-5xl mx-auto">
+            {/* Enhanced Dashboard Preview */}
+            <div className="relative mt-16 max-w-6xl mx-auto">
               <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-700">
-                <div className="bg-gray-900 rounded-xl p-6 shadow-lg">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-white">Welcome Back, John Connor! 👋</h3>
-                      <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-medium animate-pulse border border-green-500/30">
-                        Live Dashboard
+                <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg">
+                  <div className="flex h-96">
+                    {/* Sidebar */}
+                    <div className="w-64 bg-gray-800 border-r border-gray-700 p-4">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">P</span>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-sm">PestGuard Pro</h3>
+                          <p className="text-xs text-gray-400">Pest Control CRM</p>
+                        </div>
                       </div>
+                      <nav className="space-y-2">
+                        <div className="flex items-center gap-3 px-3 py-2 bg-green-600/20 border border-green-500/30 rounded-lg text-green-400">
+                          <Home className="w-4 h-4" />
+                          <span className="text-sm font-medium">Dashboard</span>
+                        </div>
+                        <div className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white">
+                          <Users className="w-4 h-4" />
+                          <span className="text-sm">Leads</span>
+                        </div>
+                        <div className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white">
+                          <FileText className="w-4 h-4" />
+                          <span className="text-sm">Quotations</span>
+                        </div>
+                        <div className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white">
+                          <BarChart3 className="w-4 h-4" />
+                          <span className="text-sm">Analytics</span>
+                        </div>
+                      </nav>
                     </div>
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                      <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg p-4">
-                        <div className="text-2xl font-bold text-blue-400">15</div>
-                        <div className="text-xs text-blue-300">+8 new leads</div>
+
+                    {/* Main Content */}
+                    <div className="flex-1 p-6">
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-6">
+                        <div>
+                          <h3 className="font-semibold text-white text-lg">Welcome Back, John Connor! 👋</h3>
+                          <p className="text-gray-400 text-sm">Here's what's happening with your leads today</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="relative">
+                            <Bell className="w-5 h-5 text-gray-400" />
+                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                          </div>
+                          <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-medium animate-pulse border border-green-500/30">
+                            Live Dashboard
+                          </div>
+                        </div>
                       </div>
-                      <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 rounded-lg p-4">
-                        <div className="text-2xl font-bold text-green-400">10</div>
-                        <div className="text-xs text-green-300">+2 conversions</div>
+
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-4 gap-4 mb-6">
+                        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <Users className="w-5 h-5 text-blue-400" />
+                            <TrendingUp className="w-4 h-4 text-green-400" />
+                          </div>
+                          <div className="text-2xl font-bold text-blue-400">127</div>
+                          <div className="text-xs text-blue-300">Total Leads</div>
+                          <div className="text-xs text-green-400">+12% this week</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <CheckCircle className="w-5 h-5 text-green-400" />
+                            <TrendingUp className="w-4 h-4 text-green-400" />
+                          </div>
+                          <div className="text-2xl font-bold text-green-400">89</div>
+                          <div className="text-xs text-green-300">Conversions</div>
+                          <div className="text-xs text-green-400">+8% this week</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <FileText className="w-5 h-5 text-orange-400" />
+                            <TrendingUp className="w-4 h-4 text-green-400" />
+                          </div>
+                          <div className="text-2xl font-bold text-orange-400">45</div>
+                          <div className="text-xs text-orange-300">Quotes Sent</div>
+                          <div className="text-xs text-green-400">+5% this week</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <Clock className="w-5 h-5 text-purple-400" />
+                            <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                          </div>
+                          <div className="text-2xl font-bold text-purple-400">23</div>
+                          <div className="text-xs text-purple-300">Pending</div>
+                          <div className="text-xs text-yellow-400">Need attention</div>
+                        </div>
                       </div>
-                      <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg p-4">
-                        <div className="text-2xl font-bold text-orange-400">23</div>
-                        <div className="text-xs text-orange-300">+5 quotes sent</div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="bg-gradient-to-r from-orange-500/10 to-orange-500/5 border border-orange-500/20 rounded-lg p-3">
-                        <div className="text-sm font-medium text-orange-300">New Lead</div>
-                        <div className="text-xs text-orange-200">Residential • Ant Problem</div>
-                      </div>
-                      <div className="bg-gradient-to-r from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-lg p-3">
-                        <div className="text-sm font-medium text-blue-300">Quote Sent</div>
-                        <div className="text-xs text-blue-200">Commercial • $2,500</div>
-                      </div>
-                      <div className="bg-gradient-to-r from-green-500/10 to-green-500/5 border border-green-500/20 rounded-lg p-3">
-                        <div className="text-sm font-medium text-green-300">Converted</div>
-                        <div className="text-xs text-green-200">Contract Signed • $1,800</div>
+
+                      {/* Recent Activity & Chart */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                          <h4 className="text-white font-medium mb-3 flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-gray-400" />
+                            Recent Activity
+                          </h4>
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3 p-2 bg-green-500/10 border border-green-500/20 rounded">
+                              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                              <div className="flex-1">
+                                <div className="text-sm text-green-300">New Lead Assigned</div>
+                                <div className="text-xs text-green-200">Residential • Ant Problem</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-2 bg-blue-500/10 border border-blue-500/20 rounded">
+                              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                              <div className="flex-1">
+                                <div className="text-sm text-blue-300">Quote Approved</div>
+                                <div className="text-xs text-blue-200">Commercial • $2,500</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-2 bg-orange-500/10 border border-orange-500/20 rounded">
+                              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                              <div className="flex-1">
+                                <div className="text-sm text-orange-300">Follow-up Scheduled</div>
+                                <div className="text-xs text-orange-200">Tomorrow 2:00 PM</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                          <h4 className="text-white font-medium mb-3 flex items-center gap-2">
+                            <BarChart3 className="w-4 h-4 text-gray-400" />
+                            Lead Performance
+                          </h4>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-gray-300">This Week</span>
+                              <span className="text-sm text-green-400">+15%</span>
+                            </div>
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" style={{width: '75%'}}></div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <div className="text-center">
+                                <div className="text-gray-400">Mon</div>
+                                <div className="w-full bg-gray-700 rounded h-1 mt-1">
+                                  <div className="bg-green-400 h-1 rounded" style={{width: '60%'}}></div>
+                                </div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-gray-400">Wed</div>
+                                <div className="w-full bg-gray-700 rounded h-1 mt-1">
+                                  <div className="bg-blue-400 h-1 rounded" style={{width: '80%'}}></div>
+                                </div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-gray-400">Fri</div>
+                                <div className="w-full bg-gray-700 rounded h-1 mt-1">
+                                  <div className="bg-purple-400 h-1 rounded" style={{width: '90%'}}></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                {/* Bottom fade overlay */}
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent rounded-b-2xl"></div>
+                {/* Enhanced bottom fade overlay with multiple layers */}
+                <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent rounded-b-2xl"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-900 to-transparent rounded-b-2xl"></div>
               </div>
             </div>
           </div>
