@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Users, FileText, BarChart3, Clock, TrendingUp, Database, Zap, Star, ArrowRight, CheckCircle, Phone, Calendar, Award, Facebook, Twitter, Linkedin, Instagram, Check } from 'lucide-react';
+import { Shield, Users, FileText, BarChart3, Clock, TrendingUp, Database, Zap, Star, ArrowRight, CheckCircle, Phone, Calendar, Award, Facebook, Twitter, Linkedin, Instagram, Check, Home, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Landing = () => {
